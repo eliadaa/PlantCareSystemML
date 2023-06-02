@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Plant Care System");
 
 
-/*        // open Login Activity
+        // open Login Activity
         Button buttonLogin = findViewById(R.id.button_login);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent); // don't close the main activity, if user goes back, it goes to the main activity
 
             }
-        });*/
+        });
 
         // open Registration Activity
         Button buttonRegistration = findViewById(R.id.button_registration);

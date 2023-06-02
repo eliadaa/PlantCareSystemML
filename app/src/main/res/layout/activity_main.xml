@@ -15,11 +15,13 @@
 
         <ImageView
             android:id="@+id/imageView_logo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="260dp"
+            android:layout_height="266dp"
             android:layout_marginTop="20dp"
             android:adjustViewBounds="false"
+            android:layout_centerHorizontal="true"
             android:maxWidth="180dp"
+            android:textAlignment="center"
             app:srcCompat="@drawable/logo" />
 
         <TextView
