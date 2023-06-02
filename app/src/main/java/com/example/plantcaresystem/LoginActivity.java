@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -42,9 +45,27 @@ public class LoginActivity extends AppCompatActivity {
 
         authProfile = FirebaseAuth.getInstance();
 
+        // show/hide password using eye icon
+        ImageView imageViewShowHidePassword = findViewById(R.id.image_show_hide_password);
+        imageViewShowHidePassword.setImageResource(R.drawable.id_hide_password);
+        imageViewShowHidePassword.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View v){
+               // check if the password was hidden or shown
+               if(editTextLoginPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                   // if password is visible, hide it
+                   editTextLoginPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                   // change icon
+                   imageViewShowHidePassword.setImageResource(R.drawable.id_hide_password);
+               } else {
+                   editTextLoginPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                   imageViewShowHidePassword.setImageResource(R.drawable.ic_show_password);
+               }
+           }
+        });
+
         // Login button
         Button buttonLogin = findViewById(R.id.button_login);
-
         buttonLogin.setOnClickListener(new View.OnClickListener() { // we assume user has entered email and password
             @Override
             public void onClick(View v) {
