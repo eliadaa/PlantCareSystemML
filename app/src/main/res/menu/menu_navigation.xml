@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/data_screen"
+        android:title="Data"
+        android:icon="@drawable/data"/>
+    <item
+        android:id="@+id/plant_screen"
+        android:title="Plant"
+        android:icon="@drawable/plant"/>
+
+    <item
+        android:id="@+id/advice_screen"
+        android:title="Advice"
+        android:icon="@drawable/advice"/>
+
+</menu>

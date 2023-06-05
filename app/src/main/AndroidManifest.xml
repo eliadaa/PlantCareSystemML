@@ -13,7 +13,13 @@
         android:theme="@style/Theme.PlantCareSystem"
         tools:targetApi="31">
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".AdviceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DataActivity"
             android:exported="false" />
         <activity
             android:name=".RegistrationActivity"

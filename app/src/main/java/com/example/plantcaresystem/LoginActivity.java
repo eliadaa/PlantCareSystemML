@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // close the alert box and continue with the logging in
     private void continueProcessGoToMainPage() {
-        startActivity(new Intent(LoginActivity.this, UserProfileActivity.class));
+        startActivity(new Intent(LoginActivity.this, DataActivity.class));
         finish(); // close login activity
     }
 
