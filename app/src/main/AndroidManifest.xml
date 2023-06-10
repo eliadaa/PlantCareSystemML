@@ -13,6 +13,9 @@
         android:theme="@style/Theme.PlantCareSystem"
         tools:targetApi="31">
         <activity
+            android:name=".DataActivity3"
+            android:exported="false" />
+        <activity
             android:name=".AdviceActivity"
             android:exported="false" />
         <activity

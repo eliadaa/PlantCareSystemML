@@ -14,4 +14,18 @@
     <color name="forest_green4">#465931</color>
     <color name="forest_green5">#2e3c20</color>
     <color name="forest_green6">#485e49</color>
+    <color name="pretty_blue">#ebfbfb</color>
+    <color name="pretty_green">#5ca68b</color>
+    <color name="other_pretty_green">#c4e393</color>
+    <color name="cream_grey">#daddd3</color>
+    <color name="grey">#808080</color>
+    <color name="blue1">#00Ffff</color>
+    <color name="blue2">#0099cc</color>
+    <color name="blue_green2">#89C2D9</color>
+    <color name="green_blue2">#68A9BB</color>
+    <color name="blue_green">#00a5a7</color>   // use this for the plant layout views
+    <color name="green_blue">#007c7d</color>   // #2
+
+
+
 </resources>

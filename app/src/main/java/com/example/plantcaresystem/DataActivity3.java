@@ -6,24 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.Window;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class AdviceActivity extends AppCompatActivity {
+public class DataActivity3 extends AppCompatActivity {
 
+    // with this class the user can set the data and parameters wanted for his specific plant
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_advice);
+        setContentView(R.layout.activity_data);
 
         // init and assign var
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // set data screen selected
-        bottomNavigationView.setSelectedItemId(R.id.advice_screen);
+        bottomNavigationView.setSelectedItemId(R.id.data_screen);
 
         // perform listener on selected
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -36,10 +35,10 @@ public class AdviceActivity extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                     return true;
                 } else if (itemId == R.id.data_screen) {
-                    startActivity(new Intent(getApplicationContext(), DataActivity.class));
-                    overridePendingTransition(0, 0);
                     return true;
                 } else if (itemId == R.id.advice_screen) {
+                    startActivity(new Intent(getApplicationContext(), AdviceActivity.class));
+                    overridePendingTransition(0, 0);
                     return true;
                 }
 

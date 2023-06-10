@@ -13,6 +13,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,55 +27,55 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText login_email_edit_text, login_password_edit_text;
     private ProgressBar progressBar;
+    private Button buttonLogin;
+
+    String textPassword, textEmail;
 
     private FirebaseAuth authProfile;
 
     private static final String TAG = "LoginActivity";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        getSupportActionBar().setTitle("Login");
-
+    private void init(){
         login_email_edit_text = findViewById(R.id.editText_login_email);
         login_password_edit_text = findViewById(R.id.editText_login_password);
         progressBar = findViewById(R.id.progressBar_login);
-
         authProfile = FirebaseAuth.getInstance();
+        buttonLogin = findViewById(R.id.button_login);
+    }
 
+    private void showHidePass(){
         // show/hide password using eye icon
         ImageView imageViewShowHidePassword = findViewById(R.id.image_show_hide_password);
         imageViewShowHidePassword.setImageResource(R.drawable.id_hide_password);
         imageViewShowHidePassword.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View v){
-               // check if the password was hidden or shown
-               if(login_password_edit_text.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
-                   // if password is visible, hide it
-                   login_password_edit_text.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                   // change icon
-                   imageViewShowHidePassword.setImageResource(R.drawable.id_hide_password);
-               } else {
-                   login_password_edit_text.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                   imageViewShowHidePassword.setImageResource(R.drawable.ic_show_password);
-               }
-           }
+            @Override
+            public void onClick(View v){
+                // check if the password was hidden or shown
+                if(login_password_edit_text.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                    // if password is visible, hide it
+                    login_password_edit_text.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    // change icon
+                    imageViewShowHidePassword.setImageResource(R.drawable.id_hide_password);
+                } else {
+                    login_password_edit_text.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    imageViewShowHidePassword.setImageResource(R.drawable.ic_show_password);
+                }
+            }
         });
+    }
 
-        // Login button
-        Button buttonLogin = findViewById(R.id.button_login);
+    private void buttonListener(){
         buttonLogin.setOnClickListener(new View.OnClickListener() { // we assume user has entered email and password
             @Override
             public void onClick(View v) {
-                String textPassword, textEmail;
-
                 textPassword = login_password_edit_text.getText().toString();
                 textEmail = login_email_edit_text.getText().toString();
 
@@ -101,13 +102,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
 
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_login);
+        init();
+        showHidePass();
+        buttonListener();
     }
 
     private void loginUser(String email, String password) {
 
-        // on complete listener to check for the complition of the task
+        // on complete listener to check for the completion of the task
         authProfile.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -116,6 +125,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     // get the current user instance
                     FirebaseUser currentUser = authProfile.getCurrentUser();
+
+                    // Toast.makeText(LoginActivity.this, "current user:"+currentUser, Toast.LENGTH_SHORT).show();
 
                     // is the email verified?
                     if(currentUser.isEmailVerified()){
@@ -129,6 +140,76 @@ public class LoginActivity extends AppCompatActivity {
                         // authProfile.signOut();
                         showDialogEmailNotVerified();
                     }
+/*
+                    if(currentUser.getUid() == null)
+                        Toast.makeText(LoginActivity.this, "No uid", Toast.LENGTH_LONG).show();
+                    else if(Databases.usersDB == null)
+                        Toast.makeText(LoginActivity.this, "DB null", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(LoginActivity.this, "neither", Toast.LENGTH_SHORT).show();*/
+
+
+                    // Start the DataActivity or perform any other necessary action
+                    // startActivity(new Intent(LoginActivity.this, DataActivity.class));
+
+/*
+                    Databases.usersDB.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            UserProfile userProfile = snapshot.getValue(UserProfile.class);
+                            CurrentLoggedUser.getInstance().setCurrentUserProfile(userProfile);
+
+                            if (userProfile != null) {
+                                // User profile is retrieved successfully
+                                // Display a toast message indicating that the user profile is not null
+                                Toast.makeText(LoginActivity.this, "UserProfile is NOT null", Toast.LENGTH_LONG).show();
+
+                                // Log the retrieved user profile for debugging purposes
+                                Log.d(TAG, "User profile retrieved: " + userProfile.getFullName());
+
+                                // Start the DataActivity or perform any other necessary action
+                                startActivity(new Intent(LoginActivity.this, DataActivity.class));
+                            } else {
+                                // User profile is null, indicating that it was not found in the database
+                                // Display a toast message indicating that the user profile is null
+                                Toast.makeText(LoginActivity.this, "UserProfile is null", Toast.LENGTH_LONG).show();
+
+                                // Log a message indicating that the user profile is null for debugging purposes
+                                Log.d(TAG, "User profile is null");
+
+                                // Handle the case when the user profile is not found in the database
+                                Toast.makeText(LoginActivity.this, "User profile not found", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // An error occurred while accessing the database
+                            // Log the database error for debugging purposes
+                            Log.e(TAG, "Database error: " + error.getMessage());
+
+                            // Handle the database error
+                            Toast.makeText(LoginActivity.this, "Database error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+*/
+
+
+
+/*                    Databases.usersDB.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            UserProfile userProfile = snapshot.getValue(UserProfile.class);
+                           //  CurrentLoggedUser.getInstance().setCurrentUser(userProfile);
+
+                            startActivity(new Intent(LoginActivity.this, DataActivity.class));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });*/
 
 
                 } else{
@@ -148,6 +229,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this, "ERROR logging in!", Toast.LENGTH_SHORT).show();
                 }
+
                 progressBar.setVisibility(View.GONE);
             }
         });

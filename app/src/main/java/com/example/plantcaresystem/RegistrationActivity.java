@@ -1,5 +1,7 @@
 package com.example.plantcaresystem;
 
+import static com.example.plantcaresystem.Databases.usersDB;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -43,9 +46,10 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_registration);
 
-        getSupportActionBar().setTitle("Registration");
+        // getSupportActionBar().setTitle("Registration");  // be aware, if you setTitle, you cant also gave Window.FEATURE_NO_TITLE ... crashes
         Toast.makeText(RegistrationActivity.this, "You can register now", Toast.LENGTH_LONG).show();
 
         progressBar = findViewById(R.id.progressBar);
@@ -115,6 +119,10 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+/*        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v("FOO_TAG", "Message for logging.");
+        }*/
+
     }
 
 
@@ -138,21 +146,26 @@ public class RegistrationActivity extends AppCompatActivity {
                         return;
                     }
 
+/*                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                        Log.v(TAG, "Message for logging.");
+                    }*/
+
                     UserProfile user = new UserProfile(textFullName, textEmail, firebaseUser.getUid(), null);
+                    // usersDB.child(user.getUid()).setValue(user); // enter user details in the database
 
                     // update display name for user
-                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(textFullName).build();
+//                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(textFullName).build();
 
 
                     // once the user was created, you can save his information to the Firebase Realtime Database
-                    ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail); // the user also has info about plants, take care of this...
+//                    ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail); // the user also has info about plants, take care of this...
 
 
                     // extracting user reference from database for "Registered Users"
                     // create one parent node
-                    DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Registered Users");
+                    DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
 
-                    referenceUser.child(firebaseUser.getUid()).setValue(writeUserDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    referenceUser.child(firebaseUser.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) { // set the data into the database
                             // only after the user was successfully saved to the database, the email verification is sent
@@ -197,7 +210,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         editEmail.setError("This email is invalid or already used. Re-enter an email");
                         editEmail.requestFocus();
                     } catch (FirebaseAuthUserCollisionException exception) {
-                        editEmail.setError("An user is already registered with this email. Kindly use another one");
+                        editEmail.setError("A user is already registered with this email. Kindly use another one");
                         editEmail.requestFocus();
                     } catch (Exception exception) {
                         Log.e(TAG, exception.getMessage());
