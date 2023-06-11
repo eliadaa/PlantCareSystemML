@@ -50,10 +50,11 @@
 
             <Spinner
                 android:id="@+id/spinner_type"
-                android:layout_width="100dp"
-                android:layout_height="34dp"
                 android:background="@drawable/transparent_button"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_width="120dp"
                 android:spinnerMode="dropdown">
 
             </Spinner>

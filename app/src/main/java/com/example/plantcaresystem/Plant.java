@@ -27,6 +27,10 @@ public class Plant {
     }
 */
 
+    public Plant(){
+
+    }
+
 
     // also add the water level stuff
     public Plant(String plantName, int minHumid, int maxHumid, int minTemp, int maxTemp, int minLuminosity, int maxLuminosity, int minSoilHumid, int maxSoilHumid) {

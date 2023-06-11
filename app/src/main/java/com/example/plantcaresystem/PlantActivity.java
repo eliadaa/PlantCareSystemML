@@ -2,16 +2,14 @@ package com.example.plantcaresystem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
-import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.List;
 
 public class PlantActivity extends AppCompatActivity { // extends AppCompatActivity extends Fragment
 
@@ -47,7 +40,11 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
     private String soil_moist_time, air_humid_time, temp_time, lumin_time, water_level_time;
 
+    private Handler handler;
+
     private RequestQueue requestQueue;
+
+    String currentActivityName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,13 +52,58 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_plant);
         requestQueue = Volley.newRequestQueue(this);
+        handler = new Handler();
         init();
         initTextViewStrings();
         getSensorDataForTemperature();
-        // fetchDataFromThingspeak();
-        // fetchData();
-        // tv_temp.setText("10");
+        getSensorDataForSoilMoisture();
+        getSensorDataForAirHumidity();
+        getSensorDataForLuminosity();
+        getSensorDataForWaterLevel();
+
+        // refresh the activity every 100 seconds
+        // Call the refreshRunnable to start the refreshing process
+        handler.postDelayed(refreshRunnable, 60000); // Start the refresh after 60 seconds initially
+
         setButtonNavigation();
+    }
+
+
+    private Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            currentActivityName = CurrentActivityUtils.getCurrentActivityName(PlantActivity.this);
+            if (currentActivityName != null) {
+                if (currentActivityName.equals("com.example.plantcaresystem.PlantActivity")) {
+                    getSensorDataForTemperature();
+                    getSensorDataForSoilMoisture();
+                    getSensorDataForAirHumidity();
+                    getSensorDataForLuminosity();
+                    getSensorDataForWaterLevel();
+
+                    Toast.makeText(PlantActivity.this, "Sensor Data Updated!", Toast.LENGTH_LONG).show();
+
+                    // Schedule the next refresh after 20 seconds
+                    handler.postDelayed(refreshRunnable, 60000); // 60000 milliseconds = 60 seconds
+                } else  {
+                    return;
+                }
+            }
+
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(refreshRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(refreshRunnable);
     }
 
     public void fetchData(){
@@ -172,6 +214,126 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
     }
 
 
+    private void getSensorDataForSoilMoisture() {
+        // URL for the moisture sensor data
+        String SoilMoistureURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
+
+        // Create a JsonObjectRequest to make a GET request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, SoilMoistureURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Get the "feeds" JSON array from the response
+                            JSONArray feedsArray = response.getJSONArray("feeds");
+
+                            // Iterate over the feeds array
+                            for (int i = 0; i < feedsArray.length(); i++) {
+                                JSONObject field = feedsArray.getJSONObject(i);
+
+                                soil_moist = field.getString("field4");
+                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
+                                tv_soil_moisture.setText(soil_moist + "%");
+
+                            }
+                        } catch (JSONException e) {
+                            // Handle JSON parsing exception
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response here
+                    }
+                });
+
+        // Add the request to the RequestQueue to send the request to the server
+        requestQueue.add(request);
+    }
+
+
+    private void getSensorDataForAirHumidity() {
+        // URL for the moisture sensor data
+        String AirHumidityURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
+
+        // Create a JsonObjectRequest to make a GET request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, AirHumidityURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Get the "feeds" JSON array from the response
+                            JSONArray feedsArray = response.getJSONArray("feeds");
+
+                            // Iterate over the feeds array
+                            for (int i = 0; i < feedsArray.length(); i++) {
+                                JSONObject field = feedsArray.getJSONObject(i);
+
+                                air_humid = field.getString("field2");
+                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
+                                tv_air_humid.setText(air_humid + "%");
+
+                            }
+                        } catch (JSONException e) {
+                            // Handle JSON parsing exception
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response here
+                    }
+                });
+
+        // Add the request to the RequestQueue to send the request to the server
+        requestQueue.add(request);
+    }
+
+
+    private void getSensorDataForWaterLevel() {
+        // URL for the moisture sensor data
+        String SoilMoistureURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
+
+        // Create a JsonObjectRequest to make a GET request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, SoilMoistureURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Get the "feeds" JSON array from the response
+                            JSONArray feedsArray = response.getJSONArray("feeds");
+
+                            // Iterate over the feeds array
+                            for (int i = 0; i < feedsArray.length(); i++) {
+                                JSONObject field = feedsArray.getJSONObject(i);
+
+                                water_level = field.getString("field5");
+                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
+                                tv_water_level.setText(water_level + "%");
+
+                            }
+                        } catch (JSONException e) {
+                            // Handle JSON parsing exception
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response here
+                    }
+                });
+
+        // Add the request to the RequestQueue to send the request to the server
+        requestQueue.add(request);
+    }
+
+
 /*
     private void getSensorDataForTemperature(){
         String TemperatureSensorURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=1";
@@ -199,12 +361,7 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
     }*/
 
-/*    private void getSensorDataForSoilMoisture(){
-        String SoilMoistureURL =
 
-
-
-    }*/
 
     private void setButtonNavigation(){
 
@@ -237,34 +394,48 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         });
     }
 
-    private void ButtonNavigation(){
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // set data screen selected
-        bottomNavigationView.setSelectedItemId(R.id.plant_screen);
 
-        // perform listener on selected
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
 
-                if (itemId == R.id.plant_screen) {
-                    return true;
-                } else if (itemId == R.id.data_screen) {
-                    startActivity(new Intent(getApplicationContext(), DataActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                } else if (itemId == R.id.advice_screen) {
-                    startActivity(new Intent(getApplicationContext(), AdviceActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                }
+    private void getSensorDataForLuminosity() {
+        // URL for the moisture sensor data
+        String AirHumidityURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
 
-                return false;
-            }
-        });
+        // Create a JsonObjectRequest to make a GET request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, AirHumidityURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Get the "feeds" JSON array from the response
+                            JSONArray feedsArray = response.getJSONArray("feeds");
+
+                            // Iterate over the feeds array
+                            for (int i = 0; i < feedsArray.length(); i++) {
+                                JSONObject field = feedsArray.getJSONObject(i);
+
+                                lumin = field.getString("field3");
+                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
+                                tv_lumin.setText(lumin + "%");
+
+                            }
+                        } catch (JSONException e) {
+                            // Handle JSON parsing exception
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response here
+                    }
+                });
+
+        // Add the request to the RequestQueue to send the request to the server
+        requestQueue.add(request);
     }
+
 
     private void setColors(){
         // set default colors for text views if the user doesn't have a plant

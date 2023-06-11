@@ -35,6 +35,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     private String myPlantName;
     private EditText editTextMyPlantName, editTextMinMoisture, editTextMaxMoisture, editTextMinTemp, editTextMaxTemp, editTextMinHumidity, editTextMaxHumidity, editTextMinLuminosity, editTextMaxLuminosity;
 
+    BottomNavigationView bottomNavigationView;
     TextView text_view_info;
     String actual_plant_data;
 
@@ -45,8 +46,16 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_data);
         // init and assign var
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         // set data screen selected
+        setButtonNavigation();
+        initializeViews();
+        getPredefinedPlantsIntoSpinner();
+
+    }
+
+    private void setButtonNavigation(){
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.data_screen);
         // perform listener on selected
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -69,12 +78,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
                 return false;
             }
         });
-        initializeViews();
-        getPredefinedPlantsIntoSpinner();
-
     }
-
-
 
 
     private void initializeViews() {
@@ -92,20 +96,23 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         // spinner_names.setOnItemSelectedListener(this);
     }
 
-    private void getPredefinedPlantsIntoSpinner(){
-        /*PlantsData.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    private void getPredefinedPlantsIntoSpinner() {
+        PlantsDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshotPlants) {
-                final List<String> plantNames = new ArrayList<>();
+                List<String> plantNames = new ArrayList<>();
+                plantNames.add("Custom"); // Add a "Custom" option
 
                 for (DataSnapshot snapshot : snapshotPlants.getChildren()) {
-                    String plantName = snapshot.child("name").getValue(String.class);
-                    if(plantName != null)
+                    Object nameValue = snapshot.child("name").getValue();
+                    String plantName = (nameValue != null) ? nameValue.toString() : null;
+
+                    if (plantName != null)
                         plantNames.add(plantName);
                     else
                         Toast.makeText(DataActivity.this, "No plants from DB", Toast.LENGTH_LONG).show();
                 }
-
 
                 ArrayAdapter<String> plantNameAdapter = new ArrayAdapter<>(DataActivity.this, R.layout.simple_spinner_plant_names, plantNames);
                 plantNameAdapter.setDropDownViewResource(R.layout.simple_spinner_plant_names);
@@ -117,8 +124,83 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
+
+
+
+/*
+    private void getPredefinedPlantsIntoSpinner(){
+        PlantsDB.addListenerForSingleValueEvent(new ValueEventListener() {
+*//*
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotSpin) {
+                for (DataSnapshot snapshot : snapshotSpin.getChildren()) {
+                    if (snapshot.child("name").getValue(String.class).equals(item)) {
+                        editTextMyPlantName.setText(item);
+
+                        Integer minTempValue = snapshot.child("minTemp").getValue(Integer.class);
+                        Integer maxTempValue = snapshot.child("maxTemp").getValue(Integer.class);
+                        Integer minHumidityValue = snapshot.child("minHum").getValue(Integer.class);
+                        Integer maxHumidityValue = snapshot.child("maxHum").getValue(Integer.class);
+                        Integer minSoilHumidityValue = snapshot.child("minSoilHum").getValue(Integer.class);
+                        Integer maxSoilHumidityValue = snapshot.child("maxSoilHum").getValue(Integer.class);
+                        Integer minLuminosityValue = snapshot.child("minLight").getValue(Integer.class);
+                        Integer maxLuminosityValue = snapshot.child("maxLight").getValue(Integer.class);
+
+                        if (minTempValue != null)
+                            editTextMinTemp.setText(minTempValue.toString());
+                        if (maxTempValue != null)
+                            editTextMaxTemp.setText(maxTempValue.toString());
+                        if (minHumidityValue != null)
+                            editTextMinHumidity.setText(minHumidityValue.toString());
+                        if (maxHumidityValue != null)
+                            editTextMaxHumidity.setText(maxHumidityValue.toString());
+                        if (minSoilHumidityValue != null)
+                            editTextMinMoisture.setText(minSoilHumidityValue.toString());
+                        if (maxSoilHumidityValue != null)
+                            editTextMaxMoisture.setText(maxSoilHumidityValue.toString());
+                        if (minLuminosityValue != null)
+                            editTextMinLuminosity.setText(minLuminosityValue.toString());
+                        if (maxLuminosityValue != null)
+                            editTextMaxLuminosity.setText(maxLuminosityValue.toString());
+
+                        break; // Assuming there's only one match, so we can exit the loop
+                    }
+                }
+            }*//*
+
+
+*//*            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotPlants) {
+                List<String> plantNames = new ArrayList<>();
+
+                for (DataSnapshot snapshot : snapshotPlants.getChildren()) {
+                    // String plantName = snapshot.child("name").getValue(String.class);
+                    // String plantName = snapshot.child("name").getValue() != null ? snapshot.child("name").getValue().toString() : null;
+
+                    Object nameValue = snapshot.child("name").getValue();
+                    String plantName = (nameValue != null) ? nameValue.toString() : null;
+
+                    if(plantName != null)
+                        plantNames.add(plantName);
+                    else
+                        Toast.makeText(DataActivity.this, "No plants from DB", Toast.LENGTH_LONG).show();
+                }
+
+
+                ArrayAdapter<String> plantNameAdapter = new ArrayAdapter<>(DataActivity.this, R.layout.simple_spinner_plant_names, plantNames);
+                plantNameAdapter.setDropDownViewResource(R.layout.simple_spinner_plant_names);
+                spinner_names.setAdapter(plantNameAdapter);
+                spinner_names.setOnItemSelectedListener(DataActivity.this);
+            }*//*
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }*/
 
     private void setActualPlantParameters(){
         if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() == null){
@@ -141,13 +223,105 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
+        if (item.equals("Custom")) {
+            // User wants to manually enter data
+            // Clear editTexts or perform any desired action
+        } else {
+            PlantsDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshotSpin) {
+                    for (DataSnapshot snapshot : snapshotSpin.getChildren()) {
+                        if (snapshot.child("name").getValue() != null && snapshot.child("name").getValue().toString().equals(item)) {
+                            editTextMyPlantName.setText(item);
+
+                            Integer minTempValue = snapshot.child("minTemperature").getValue(Integer.class);
+                            Integer maxTempValue = snapshot.child("maxTemperature").getValue(Integer.class);
+                            Integer minHumidityValue = snapshot.child("minHumidity").getValue(Integer.class);
+                            Integer maxHumidityValue = snapshot.child("maxHumidity").getValue(Integer.class);
+                            Integer minSoilHumidityValue = snapshot.child("minMoisture").getValue(Integer.class);
+                            Integer maxSoilHumidityValue = snapshot.child("maxMoisture").getValue(Integer.class);
+                            Integer minLuminosityValue = snapshot.child("minLuminosity").getValue(Integer.class);
+                            Integer maxLuminosityValue = snapshot.child("maxLuminosity").getValue(Integer.class);
+
+                            if (minTempValue != null)
+                                editTextMinTemp.setText(minTempValue.toString());
+                            if (maxTempValue != null)
+                                editTextMaxTemp.setText(maxTempValue.toString());
+                            if (minHumidityValue != null)
+                                editTextMinHumidity.setText(minHumidityValue.toString());
+                            if (maxHumidityValue != null)
+                                editTextMaxHumidity.setText(maxHumidityValue.toString());
+                            if (minSoilHumidityValue != null)
+                                editTextMinMoisture.setText(minSoilHumidityValue.toString());
+                            if (maxSoilHumidityValue != null)
+                                editTextMaxMoisture.setText(maxSoilHumidityValue.toString());
+                            if (minLuminosityValue != null)
+                                editTextMinLuminosity.setText(minLuminosityValue.toString());
+                            if (maxLuminosityValue != null)
+                                editTextMaxLuminosity.setText(maxLuminosityValue.toString());
+
+                            break; // Assuming there's only one match, so we can exit the loop
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle onCancelled if needed
+                }
+            });
+        }
+    }
+
+
+/*    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String item = parent.getItemAtPosition(position).toString();
         if(item.equals("Manual")) {
             // user wants to manually enter data
             // clearEditTexts
         }
         else {
-            PlantsData.addListenerForSingleValueEvent(new ValueEventListener() {
+            PlantsDB.addListenerForSingleValueEvent(new ValueEventListener() {
+
                 @Override
+                public void onDataChange(@NonNull DataSnapshot snapshotSpin) {
+                    for (DataSnapshot snapshot : snapshotSpin.getChildren()) {
+                        if (snapshot.child("name").getValue(String.class).equals(item)) {
+                            editTextMyPlantName.setText(item);
+
+                            Integer minTempValue = snapshot.child("minTemp").getValue(Integer.class);
+                            Integer maxTempValue = snapshot.child("maxTemp").getValue(Integer.class);
+                            Integer minHumidityValue = snapshot.child("minHum").getValue(Integer.class);
+                            Integer maxHumidityValue = snapshot.child("maxHum").getValue(Integer.class);
+                            Integer minSoilHumidityValue = snapshot.child("minSoilHum").getValue(Integer.class);
+                            Integer maxSoilHumidityValue = snapshot.child("maxSoilHum").getValue(Integer.class);
+                            Integer minLuminosityValue = snapshot.child("minLight").getValue(Integer.class);
+                            Integer maxLuminosityValue = snapshot.child("maxLight").getValue(Integer.class);
+
+                            if (minTempValue != null)
+                                editTextMinTemp.setText(minTempValue.toString());
+                            if (maxTempValue != null)
+                                editTextMaxTemp.setText(maxTempValue.toString());
+                            if (minHumidityValue != null)
+                                editTextMinHumidity.setText(minHumidityValue.toString());
+                            if (maxHumidityValue != null)
+                                editTextMaxHumidity.setText(maxHumidityValue.toString());
+                            if (minSoilHumidityValue != null)
+                                editTextMinMoisture.setText(minSoilHumidityValue.toString());
+                            if (maxSoilHumidityValue != null)
+                                editTextMaxMoisture.setText(maxSoilHumidityValue.toString());
+                            if (minLuminosityValue != null)
+                                editTextMinLuminosity.setText(minLuminosityValue.toString());
+                            if (maxLuminosityValue != null)
+                                editTextMaxLuminosity.setText(maxLuminosityValue.toString());
+
+                            break; // Assuming there's only one match, so we can exit the loop
+                        }
+                    }
+                }
+
+*//*                @Override
                 public void onDataChange(@NonNull DataSnapshot snapshotSpin) {
                     for (DataSnapshot snapshot: snapshotSpin.getChildren()) {
                         if(snapshot.child("name").getValue(String.class).equals(item)){
@@ -162,7 +336,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
                             editTextMaxLuminosity.setText(snapshot.child("maxLight").getValue(Integer.class).toString());
                         }
                     }
-                }
+                }*//*
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -170,7 +344,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             });
         }
-    }
+    }*/
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
