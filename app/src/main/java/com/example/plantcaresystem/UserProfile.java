@@ -6,6 +6,10 @@ public class UserProfile {
     private String uid;
     private Plant plant;
 
+    public UserProfile(){
+
+    }
+
     public UserProfile(String fullName, String email, String uid, Plant plant) {
         FullName = fullName;
         this.email = email;

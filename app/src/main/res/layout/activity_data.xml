@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_marginRight="10dp"
-                android:text="Type:"
+                android:text="Plant type:"
                 android:textSize="14dp">
 
             </com.google.android.material.textview.MaterialTextView>
@@ -54,7 +54,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:textAlignment="center"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:spinnerMode="dropdown">
 
             </Spinner>
@@ -100,6 +100,7 @@
                     android:id="@+id/et_plantName"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
+                    android:background="@drawable/custom_button"
                     android:layout_gravity="center"
                     android:hint="my plant"
                     android:textColorHint="@color/grey"
@@ -132,6 +133,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_gravity="center"
                     android:hint="min %"
+                    android:background="@drawable/custom_button"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
                     android:gravity="center"
@@ -145,6 +147,7 @@
                     android:layout_gravity="center"
                     android:hint="max %"
                     android:textColor="@color/forest_green"
+                    android:background="@drawable/custom_button"
                     android:textColorHint="@color/grey"
                     android:gravity="center"
                     android:textSize="14dp">
@@ -176,6 +179,7 @@
                     android:layout_gravity="center"
                     android:hint="min °C"
                     android:textColor="@color/forest_green"
+                    android:background="@drawable/custom_button"
                     android:textColorHint="@color/grey"
                     android:gravity="center"
                     android:textSize="14dp">
@@ -189,6 +193,7 @@
                     android:hint="max °C"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
+                    android:background="@drawable/custom_button"
                     android:gravity="center"
                     android:textSize="14dp">
                 </EditText>
@@ -220,6 +225,7 @@
                     android:layout_gravity="center"
                     android:hint="min %"
                     android:textColor="@color/forest_green"
+                    android:background="@drawable/custom_button"
                     android:textColorHint="@color/grey"
                     android:gravity="center"
                     android:textSize="14dp">
@@ -233,6 +239,7 @@
                     android:hint="max %"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
+                    android:background="@drawable/custom_button"
                     android:gravity="center"
                     android:textSize="14dp">
                 </EditText>
@@ -265,6 +272,7 @@
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
                     android:gravity="center"
+                    android:background="@drawable/custom_button"
                     android:textSize="14dp">
                 </EditText>
 
@@ -276,6 +284,7 @@
                     android:hint="max %"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
+                    android:background="@drawable/custom_button"
                     android:gravity="center"
                     android:textSize="14dp">
                 </EditText>
@@ -292,7 +301,7 @@
                     android:id="@+id/button_save_data"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/forest_green_round"
+                    android:background="@drawable/transparent_button"
                     android:text="Save Data"
                     android:textAllCaps="true"
                     android:textColor="@color/forest_green">

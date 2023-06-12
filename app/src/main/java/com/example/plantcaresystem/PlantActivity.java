@@ -69,6 +69,10 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
     }
 
 
+    // check somehow the value of the water level
+    // if smaller than x alert message
+
+
     private Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {

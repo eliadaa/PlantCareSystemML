@@ -31,9 +31,9 @@ public class Plant {
 
     }
 
-
+//(myPlantName, maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight);
     // also add the water level stuff
-    public Plant(String plantName, int minHumid, int maxHumid, int minTemp, int maxTemp, int minLuminosity, int maxLuminosity, int minSoilHumid, int maxSoilHumid) {
+    public Plant(String plantName, int maxSoilHumid, int minSoilHumid, int maxTemp, int minTemp, int maxHumid,  int minHumid, int maxLuminosity, int minLuminosity) {
         this.plantName = plantName;
         this.minHumid = minHumid;
         this.maxHumid = maxHumid;
