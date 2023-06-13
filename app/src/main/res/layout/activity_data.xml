@@ -98,7 +98,7 @@
 
                 <EditText
                     android:id="@+id/et_plantName"
-                    android:layout_width="130dp"
+                    android:layout_width="150dp"
                     android:layout_height="40dp"
                     android:background="@drawable/custom_button"
                     android:layout_gravity="center"
@@ -130,7 +130,7 @@
                     android:id="@+id/et_minMoist"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center"
                     android:hint="min %"
                     android:background="@drawable/custom_button"
@@ -140,11 +140,19 @@
                     android:textSize="14dp">
                 </EditText>
 
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/forest_green" />
+
                 <EditText
                     android:id="@+id/et_maxMoist"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
                     android:hint="max %"
                     android:textColor="@color/forest_green"
                     android:background="@drawable/custom_button"
@@ -175,7 +183,7 @@
                     android:id="@+id/et_minTemp"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center"
                     android:hint="min °C"
                     android:textColor="@color/forest_green"
@@ -185,11 +193,19 @@
                     android:textSize="14dp">
                 </EditText>
 
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/forest_green" />
+
                 <EditText
                     android:id="@+id/et_maxTemp"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
                     android:hint="max °C"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
@@ -221,7 +237,7 @@
                     android:id="@+id/et_minAirHum"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center"
                     android:hint="min %"
                     android:textColor="@color/forest_green"
@@ -231,11 +247,19 @@
                     android:textSize="14dp">
                 </EditText>
 
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/forest_green" />
+
                 <EditText
                     android:id="@+id/et_maxAirHum"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
                     android:hint="max %"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
@@ -266,7 +290,7 @@
                     android:id="@+id/et_minLumin"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center"
                     android:hint="min %"
                     android:textColor="@color/forest_green"
@@ -276,12 +300,20 @@
                     android:textSize="14dp">
                 </EditText>
 
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/forest_green" />
+
                 <EditText
                     android:id="@+id/et_maxLumin"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:hint="max %"
+                    android:layout_marginLeft="5dp"
                     android:textColor="@color/forest_green"
                     android:textColorHint="@color/grey"
                     android:background="@drawable/custom_button"

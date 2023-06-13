@@ -111,18 +111,43 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     // Method to update the plant parameters
     private void SetAndUpdatePlantParameters(){
         FirebaseUser currentUser = authProfile.getCurrentUser();
-        if(editTextMyPlantName.getText().toString().isEmpty() ||
-                editTextMaxMoisture.getText().toString().isEmpty() ||
-                editTextMaxTemp.getText().toString().isEmpty() ||
-                editTextMaxLuminosity.getText().toString().isEmpty() ||
-                editTextMinHumidity.getText().toString().isEmpty() ||
-                editTextMaxHumidity.getText().toString().isEmpty() ||
-                editTextMinLuminosity.getText().toString().isEmpty() ||
-                editTextMinMoisture.getText().toString().isEmpty() ||
-                editTextMinTemp.getText().toString().isEmpty()){
-            Toast.makeText(this, "make sure you fill all fields!", Toast.LENGTH_LONG).show();
+
+        // display and focus on incomplete fields?
+
+        // check if all fields filled
+        if (isEmptyEditText(editTextMyPlantName) ||
+                isEmptyEditText(editTextMaxMoisture) ||
+                isEmptyEditText(editTextMaxTemp) ||
+                isEmptyEditText(editTextMaxLuminosity) ||
+                isEmptyEditText(editTextMinHumidity) ||
+                isEmptyEditText(editTextMaxHumidity) ||
+                isEmptyEditText(editTextMinLuminosity) ||
+                isEmptyEditText(editTextMinMoisture) ||
+                isEmptyEditText(editTextMinTemp)) {
+            Toast.makeText(this, "Make sure you fill all fields!", Toast.LENGTH_LONG).show();
             return;
         }
+
+        // check if the values entered for sensor data are numbers
+        if (!isNumeric(editTextMaxMoisture) || !isNumeric(editTextMinMoisture) ||
+            !isNumeric(editTextMaxTemp) || !isNumeric(editTextMinTemp) ||
+            !isNumeric(editTextMaxLuminosity) || !isNumeric(editTextMinLuminosity) ||
+            !isNumeric(editTextMaxHumidity) || !isNumeric(editTextMinHumidity)){
+            Toast.makeText(this, "The sensor threshold value introduced must be numeric!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // check if min sensor data set < max sensor data set
+        if(parseIntEditText(editTextMaxLuminosity) <= parseIntEditText(editTextMinLuminosity) ||
+            parseIntEditText(editTextMaxHumidity) <= parseIntEditText(editTextMinLuminosity) ||
+            parseIntEditText(editTextMaxLuminosity) <= parseIntEditText(editTextMinLuminosity) ||
+            parseIntEditText(editTextMaxMoisture) <= parseIntEditText(editTextMinMoisture)){
+            Toast.makeText(this, "min should be smaller (<) than the max for each sensor setting", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
 
         // Retrieve values from editTexts
         myPlantName = editTextMyPlantName.getText().toString();
@@ -141,7 +166,19 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         CurrentLoggedUser.getInstance().getCurrentUserProfile().setPlant(plant);
         removeDataFromEditTexts();
         setActualPlantParameters();
-        Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Info saved", Toast.LENGTH_LONG).show();
+    }
+
+    private boolean isEmptyEditText(EditText editText) {
+        return editText.getText() == null || editText.getText().toString().isEmpty();
+    }
+
+    private boolean isNumeric(EditText editText){
+        return CurrentLoggedUser.isInt(editText.getText().toString());
+    }
+
+    private int parseIntEditText(EditText editText){
+        return Integer.parseInt(editText.getText().toString());
     }
 
 
