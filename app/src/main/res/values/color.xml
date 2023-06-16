@@ -25,6 +25,8 @@
     <color name="green_blue2">#68A9BB</color>
     <color name="blue_green">#00a5a7</color>   // use this for the plant layout views
     <color name="green_blue">#007c7d</color>   // #2
+    <color name="pastel_pink">#FFD1DC</color>
+    <color name="darker_pastel_pink">#FFB6C1</color>
 
 
 

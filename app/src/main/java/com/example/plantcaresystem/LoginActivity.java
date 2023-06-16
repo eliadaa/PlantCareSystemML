@@ -1,9 +1,5 @@
 package com.example.plantcaresystem;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +46,21 @@ public class LoginActivity extends AppCompatActivity {
 
     // Tag for logging purposes
     private static final String TAG = "LoginActivity";
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Hide the title bar
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_login);
+        // Initialize UI elements
+        init();
+        // Setup show/hide password functionality
+        showHidePass();
+        // Setup login button click listener
+        LoginButtonListener();
+    }
 
     // Initialize UI elements
     private void init(){
@@ -98,20 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(textEmail, textPassword);
             }
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Hide the title bar
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_login);
-        // Initialize UI elements
-        init();
-        // Setup show/hide password functionality
-        showHidePass();
-        // Setup login button click listener
-        LoginButtonListener();
     }
 
     // Login user with email and password
@@ -202,9 +203,23 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    // Continue with the login process and go to PlantActivity
+    // Continue with the login process; go to
+    // DataActivity if the user doesnt have a plant set up already
+    // PlantActivity if the user has a plant
     private void continueProcessGoToPlantActivity() {
-        startActivity(new Intent(LoginActivity.this, PlantActivity.class));
-        finish(); // close login activity
+        if (CurrentLoggedUser.getInstance().getCurrentUser() != null) {
+            Plant plant = CurrentLoggedUser.getInstance().getCurrentUser().getPlant();
+            if (plant != null) {
+                // Plant object exists, navigate to PlantActivity
+                startActivity(new Intent(LoginActivity.this, PlantActivity.class));
+            } else {
+                // Plant object is null or plantName is null, navigate to DataActivity
+                startActivity(new Intent(LoginActivity.this, DataActivity.class));
+            }
+            finish(); // close login activity
+        }
     }
 }
+
+
+// create an alert for first time login, to tell the user to enter plant info

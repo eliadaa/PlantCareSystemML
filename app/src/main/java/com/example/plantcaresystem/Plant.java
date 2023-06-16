@@ -2,10 +2,15 @@ package com.example.plantcaresystem;
 
 public class Plant {
     private String plantName;
-    private int minHumid, maxHumid;  // humidity dht11
-    private int minTemp, maxTemp;    // temperature dht11
-    private int minLuminosity, maxLuminosity;  // luminosity temt6000
-    private int minSoilHumid, maxSoilHumid;    // soil moisture
+    private float minHumid, maxHumid;  // humidity dht11
+    private float minTemp, maxTemp;    // temperature dht11
+    private float minLuminosity, maxLuminosity;  // luminosity temt6000
+    private float minSoilMoist, maxSoilMoist;    // soil moisture
+
+    // Default constructor
+    public Plant() {
+        // Initialize default values or leave empty
+    }
 
 //    private int minWaterLevel, maxWaterLevel;  // water level sensor
 
@@ -27,13 +32,9 @@ public class Plant {
     }
 */
 
-    public Plant(){
 
-    }
-
-//(myPlantName, maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight);
     // also add the water level stuff
-    public Plant(String plantName, int maxSoilHumid, int minSoilHumid, int maxTemp, int minTemp, int maxHumid,  int minHumid, int maxLuminosity, int minLuminosity) {
+    public Plant(String plantName, float minHumid, float maxHumid, float minTemp, float maxTemp, float minLuminosity, float maxLuminosity, float minSoilMoist, float maxSoilMoist) {
         this.plantName = plantName;
         this.minHumid = minHumid;
         this.maxHumid = maxHumid;
@@ -41,8 +42,8 @@ public class Plant {
         this.maxTemp = maxTemp;
         this.minLuminosity = minLuminosity;
         this.maxLuminosity = maxLuminosity;
-        this.minSoilHumid = minSoilHumid;
-        this.maxSoilHumid = maxSoilHumid;
+        this.minSoilMoist = minSoilMoist;
+        this.maxSoilMoist = maxSoilMoist;
     }
 
     public String getPlantName() {
@@ -53,7 +54,7 @@ public class Plant {
         this.plantName = plantName;
     }
 
-    public int getMinHumid() {
+    public float getMinHumid() {
         return minHumid;
     }
 
@@ -61,7 +62,7 @@ public class Plant {
         this.minHumid = minHumid;
     }
 
-    public int getMaxHumid() {
+    public float getMaxHumid() {
         return maxHumid;
     }
 
@@ -69,7 +70,7 @@ public class Plant {
         this.maxHumid = maxHumid;
     }
 
-    public int getMinTemp() {
+    public float getMinTemp() {
         return minTemp;
     }
 
@@ -77,7 +78,7 @@ public class Plant {
         this.minTemp = minTemp;
     }
 
-    public int getMaxTemp() {
+    public float getMaxTemp() {
         return maxTemp;
     }
 
@@ -85,7 +86,7 @@ public class Plant {
         this.maxTemp = maxTemp;
     }
 
-    public int getMinLuminosity() {
+    public float getMinLuminosity() {
         return minLuminosity;
     }
 
@@ -93,7 +94,7 @@ public class Plant {
         this.minLuminosity = minLuminosity;
     }
 
-    public int getMaxLuminosity() {
+    public float getMaxLuminosity() {
         return maxLuminosity;
     }
 
@@ -101,20 +102,20 @@ public class Plant {
         this.maxLuminosity = maxLuminosity;
     }
 
-    public int getMinSoilHumid() {
-        return minSoilHumid;
+    public float getMinSoilMoist() {
+        return minSoilMoist;
     }
 
-    public void setMinSoilHumid(int minSoilHumid) {
-        this.minSoilHumid = minSoilHumid;
+    public void setMinSoilMoist(int minSoilMoist) {
+        this.minSoilMoist = minSoilMoist;
     }
 
-    public int getMaxSoilHumid() {
-        return maxSoilHumid;
+    public float getMaxSoilMoist() {
+        return maxSoilMoist;
     }
 
-    public void setMaxSoilHumid(int maxSoilHumid) {
-        this.maxSoilHumid = maxSoilHumid;
+    public void setMaxSoilMoist(int maxSoilMoist) {
+        this.maxSoilMoist = maxSoilMoist;
     }
 }
 

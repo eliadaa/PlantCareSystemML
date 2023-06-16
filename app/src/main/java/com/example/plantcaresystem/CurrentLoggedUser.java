@@ -20,9 +20,9 @@ public class CurrentLoggedUser {
     }
 
     // check if the parameters received are integers
-    public static boolean isInt(String value){
+    public static boolean isFloat(String value){
         try{
-            Integer.parseInt(value);
+            Float.parseFloat(value);
             return true;
         } catch (NumberFormatException exception){
             return false;

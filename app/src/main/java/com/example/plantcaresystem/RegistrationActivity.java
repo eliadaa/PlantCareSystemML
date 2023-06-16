@@ -1,10 +1,5 @@
 package com.example.plantcaresystem;
 
-import static com.example.plantcaresystem.Databases.usersDB;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,7 +45,11 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_registration);
+        init();
+        RegistrationButtonListener();
+    }
 
+    private void init(){
         // getSupportActionBar().setTitle("Registration");  // be aware, if you setTitle, you cant also gave Window.FEATURE_NO_TITLE ... crashes
         Toast.makeText(RegistrationActivity.this, "You can register now", Toast.LENGTH_LONG).show();
 
@@ -58,8 +59,9 @@ public class RegistrationActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editText_register_email);
         editPassword = findViewById(R.id.editText_register_password);
         editConfirmPassword = findViewById(R.id.editText_register_confirm_password);
+    }
 
-        // not defined globally because it's not called by other methods from other classes, so it would be redundant
+    private void RegistrationButtonListener(){
         Button register_button = findViewById(R.id.button_registration);
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,11 +120,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
-
-/*        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v("FOO_TAG", "Message for logging.");
-        }*/
-
     }
 
 
@@ -149,6 +146,8 @@ public class RegistrationActivity extends AppCompatActivity {
 /*                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
                         Log.v(TAG, "Message for logging.");
                     }*/
+
+                    // Plant plant = new Plant();
 
                     UserProfile user = new UserProfile(textFullName, textEmail, firebaseUser.getUid(), null);
                     // usersDB.child(user.getUid()).setValue(user); // enter user details in the database

@@ -3,9 +3,6 @@ package com.example.plantcaresystem;
 import static com.example.plantcaresystem.Databases.PlantsDB;
 import static com.example.plantcaresystem.Databases.usersDB;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -20,23 +17,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class DataActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private Spinner spinner_names;
     private String myPlantName;
     private EditText editTextMyPlantName, editTextMinMoisture, editTextMaxMoisture, editTextMinTemp, editTextMaxTemp, editTextMinHumidity, editTextMaxHumidity, editTextMinLuminosity, editTextMaxLuminosity;
-    private int maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight;
+    private float maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight;
     private FirebaseAuth authProfile;
     BottomNavigationView bottomNavigationView;
     TextView text_view_info;
@@ -53,8 +54,8 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
 
         authProfile = FirebaseAuth.getInstance();
 
-        setButtonNavigation(); // set data screen selected
-        init(); // init and assign var
+        setButtonNavigation();            // set data screen selected
+        init();                           // init and assign var
         getPredefinedPlantsIntoSpinner(); // populate spinner menu with values from the Plants database
         setActualPlantParameters();       // setting plant parameters, upper and lower threshold for sensors, plant name..
         SaveButtonListener();             // on click listener on the save button
@@ -138,35 +139,56 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         // check if min sensor data set < max sensor data set
-        if(parseIntEditText(editTextMaxLuminosity) <= parseIntEditText(editTextMinLuminosity) ||
-            parseIntEditText(editTextMaxHumidity) <= parseIntEditText(editTextMinLuminosity) ||
-            parseIntEditText(editTextMaxLuminosity) <= parseIntEditText(editTextMinLuminosity) ||
-            parseIntEditText(editTextMaxMoisture) <= parseIntEditText(editTextMinMoisture)){
+        if(parseFloatEditText(editTextMaxLuminosity) <= parseFloatEditText(editTextMinLuminosity) ||
+            parseFloatEditText(editTextMaxHumidity) <= parseFloatEditText(editTextMinLuminosity) ||
+            parseFloatEditText(editTextMaxLuminosity) <= parseFloatEditText(editTextMinLuminosity) ||
+            parseFloatEditText(editTextMaxMoisture) <= parseFloatEditText(editTextMinMoisture)) {
             Toast.makeText(this, "min should be smaller (<) than the max for each sensor setting", Toast.LENGTH_SHORT).show();
             return;
         }
 
-
-
-
         // Retrieve values from editTexts
         myPlantName = editTextMyPlantName.getText().toString();
-        maxMoist = Integer.parseInt(editTextMaxMoisture.getText().toString());
-        minMoist = Integer.parseInt(editTextMinMoisture.getText().toString());
-        maxTemp = Integer.parseInt(editTextMaxTemp.getText().toString());
-        minTemp = Integer.parseInt(editTextMinTemp.getText().toString());
-        maxHumi = Integer.parseInt(editTextMaxHumidity.getText().toString());
-        minHumi = Integer.parseInt(editTextMinHumidity.getText().toString());
-        maxLight = Integer.parseInt(editTextMaxLuminosity.getText().toString());
-        minLight = Integer.parseInt(editTextMinLuminosity.getText().toString());
+        maxMoist = Float.parseFloat(editTextMaxMoisture.getText().toString());
+        minMoist = Float.parseFloat(editTextMinMoisture.getText().toString());
+        maxTemp = Float.parseFloat(editTextMaxTemp.getText().toString());
+        minTemp = Float.parseFloat(editTextMinTemp.getText().toString());
+        maxHumi = Float.parseFloat(editTextMaxHumidity.getText().toString());
+        minHumi = Float.parseFloat(editTextMinHumidity.getText().toString());
+        maxLight = Float.parseFloat(editTextMaxLuminosity.getText().toString());
+        minLight = Float.parseFloat(editTextMinLuminosity.getText().toString());
 
         // Create a new Plant object
+        // CurrentLoggedUser.getInstance().setCurrentUserProfile(currentUser);
         Plant plant = new Plant(myPlantName, maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight);
         usersDB.child(currentUser.getUid()).child("plant").setValue(plant);
         CurrentLoggedUser.getInstance().getCurrentUserProfile().setPlant(plant);
         removeDataFromEditTexts();
         setActualPlantParameters();
         Toast.makeText(this, "Info saved", Toast.LENGTH_LONG).show();
+
+/*
+        sendDataToThingSpeak("https://api.thingspeak.com/update?api_key=VVSDJEX2MALIAU1D&field6=10");
+        Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
+*/
+
+//        sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity()));
+//        Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
+
+/*        if(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity() > 0){
+            // got the left limit, send this range to thingspeak -> ESP8266 to control the pump
+            sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity()));
+            Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
+        }*/
+
+//        if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+//            if(parseFloatEditText(editTextMinMoisture) > 0){
+//                // got the left limit, send this range to thingspeak -> ESP8266 to control the pump
+//                sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(parseFloatEditText(editTextMinMoisture)));
+//                Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
+//            }
+//        }
+
     }
 
     private boolean isEmptyEditText(EditText editText) {
@@ -174,12 +196,164 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private boolean isNumeric(EditText editText){
-        return CurrentLoggedUser.isInt(editText.getText().toString());
+        return CurrentLoggedUser.isFloat(editText.getText().toString());
     }
 
-    private int parseIntEditText(EditText editText){
-        return Integer.parseInt(editText.getText().toString());
+    private float parseFloatEditText(EditText editText){
+        return Float.parseFloat(editText.getText().toString());
     }
+
+//    private static DataActivity instance;
+//    public DataActivity(){
+//        instance = this;
+//    }
+
+/*
+    private void sendDataToThingSpeak(String apiKey, String value){
+
+        // Create an instance of the HttpClient class
+        HttpClient httpClient = HttpClientBuilder.create().build();
+
+        // Create an instance of the HttpPost class
+        HttpPost request = new HttpPost("https://api.thingspeak.com/update.json");
+
+        try {
+            String jsonData = "{\"api_key\":\"" + apiKey + "\",\"field5\":" + value + "}";
+
+            // Set the JSON payload as the request entity
+            StringEntity params = new StringEntity(jsonData, "UTF-8");
+            params.setContentType("application/json");
+            request.setEntity(params);
+
+            // Send the HTTP POST request to ThingSpeak
+            HttpResponse response = httpClient.execute(request);
+
+            // Process the response if needed
+            System.out.println("Response status: " + response.getStatusLine().getStatusCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+*/
+
+
+
+/*    private void sendDataToThingSpeak(String apiKey, String value){
+        try {
+            String urlString = "https://api.thingspeak.com/update?api_key=" + apiKey + "&field6=" + value;
+
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Data sent successfully
+                // You can handle the response if needed
+            } else {
+                // Error handling
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }*/
+
+/*    private void sendDataToThingSpeak(String apiKey, String value){
+            try {
+                // Create a URL object with the desired URL
+                URL url = new URL("http://www.example.com");
+
+                // Open a connection to the URL
+                URLConnection connection = url.openConnection();
+
+                // Read the content from the URL
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
+
+/*    public static void sendDataToThingSpeak(String url) {
+        try {
+            // Create a URL object with the desired URL
+            URL website = new URL(url);
+
+            // Open a connection to the URL
+            HttpURLConnection connection = (HttpURLConnection) website.openConnection();
+
+            // Set the request method (GET by default)
+            connection.setRequestMethod("GET");
+
+            // Connect to the URL
+            connection.connect();
+
+            // Get the response code (optional)
+            int responseCode = connection.getResponseCode();
+
+            // Disconnect/close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*//*    public static void sendDataToThingSpeak(String url) {
+        try {
+            // Create a URL object with the desired URL
+            URL website = new URL(url);
+
+            // Open a connection to the URL
+            HttpURLConnection connection = (HttpURLConnection) website.openConnection();
+
+            // Set the request method (GET by default)
+            connection.setRequestMethod("GET");
+
+            // Connect to the URL
+            connection.connect();
+
+            // Get the response code (optional)
+            int responseCode = connection.getResponseCode();
+
+            // Disconnect/close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
+
+/*    private void sendDataToThingSpeak(String apiKey, String value){
+        try {
+            String urlString = "https://api.thingspeak.com/update?api_key=" + apiKey + "&field6=" + value;
+//            https://api.thingspeak.com/update?api_key=VVSDJEX2MALIAU1D&field1=0
+
+            Toast.makeText(this, urlString, Toast.LENGTH_SHORT).show();
+
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Data sent successfully
+                // You can handle the response if needed
+            } else {
+                // Error handling
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }*/
 
 
     private void getPredefinedPlantsIntoSpinner() {
@@ -216,7 +390,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setActualPlantParameters(){
         if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() == null){
             text_view_info.setText("Provide plant parameters.\nEither select a plant type from the list, or set it to custom settings...");
-            Toast.makeText(this, "NO PLANT FOR USER", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please set up your plant information!", Toast.LENGTH_LONG).show();
         }
         else{
             actual_plant_data = String.format("Plant Care Settings for plant:   <b>%s</b><br>" +
@@ -227,14 +401,67 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
                     CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxTemp(),
                     CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinHumid(),
                     CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxHumid(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilHumid(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxSoilHumid(),
+                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilMoist(),
+                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxSoilMoist(),
                     CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinLuminosity(),
                     CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity());
             // text_view_info.setText(actual_plant_data);
             text_view_info.setText(Html.fromHtml(actual_plant_data));
+
+/*            Float minRangeMoist = CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilMoist();
+            Toast.makeText(this, ""+ minRangeMoist, Toast.LENGTH_SHORT).show();*/
+
+/*
+            sendDataToThingSpeak("VVSDJEX2MALIAU1D", String.valueOf(minRangeMoist));
+            Toast.makeText(this, "sent", Toast.LENGTH_SHORT).show();
+
+            */
+
+
+
+
+
+
+//
+/*            if(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilMoist() > 0){
+                // got the left limit, send this range to thingspeak -> ESP8266 to control the pump
+                sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilMoist()));
+                Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
+            }*/
         }
     }
+
+/*
+    public static void sendDataToThingSpeak(String url, String value) {
+        try {
+            URL urlObject = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            String postData = "field1=" + value; // Customize this based on your ThingSpeak channel
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(postData.getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+//                System.out.println("Data sent successfully to ThingSpeak.");
+                Toast.makeText(instance, "Sent data", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(instance, "Error sending data", Toast.LENGTH_LONG).show();
+//                System.out.println("Error sending data to ThingSpeak. Response Code: " + responseCode);
+            }
+
+            connection.disconnect();
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
