@@ -34,10 +34,10 @@ public class CurrentLoggedUser {
         CurrentLoggedUser.instance = instance;
     }
 
-    public UserProfile getCurrentUser() {
+    /*public UserProfile getCurrentUserProfile() {
         return currentUser;
     }
-
+*/
     public void setCurrentUserProfile(UserProfile currentUser) {
         this.currentUser = currentUser;
     }

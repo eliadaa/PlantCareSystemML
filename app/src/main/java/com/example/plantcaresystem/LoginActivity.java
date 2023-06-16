@@ -207,8 +207,8 @@ public class LoginActivity extends AppCompatActivity {
     // DataActivity if the user doesnt have a plant set up already
     // PlantActivity if the user has a plant
     private void continueProcessGoToPlantActivity() {
-        if (CurrentLoggedUser.getInstance().getCurrentUser() != null) {
-            Plant plant = CurrentLoggedUser.getInstance().getCurrentUser().getPlant();
+        if (CurrentLoggedUser.getInstance().getCurrentUserProfile() != null) {
+            Plant plant = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant();
             if (plant != null) {
                 // Plant object exists, navigate to PlantActivity
                 startActivity(new Intent(LoginActivity.this, PlantActivity.class));

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,17 +30,28 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
     private LinearLayout layout_soil_moisture, layout_air_humid, layout_temperature, layout_lumin, layout_water_level;
 
-    private TextView tv_soil_moisture, tv_air_humid, tv_temp, tv_lumin, tv_water_level, tv_info;
+    private TextView tv_soil_moisture, tv_air_humid, tv_temp, tv_lumin, tv_water_level, tv_plant_info;
 
-    private String soil_moist, air_humid, temp, lumin, water_level, info;
+    private String soil_moist, air_humid, temp, lumin, water_level, plantInfoSensors;
 
     private String soil_moist_time, air_humid_time, temp_time, lumin_time, water_level_time;
+
+    private Float minValue, maxValue;
 
     private Handler handler;
 
     private RequestQueue requestQueue;
 
     String currentActivityName;
+
+    // info not displaying properly
+    // plant status updated on should depend on getInfoFromThingSpeak
+
+    // check the limits on received values
+    // color the layout -> blue or pink
+
+    // send data to water_min limit -> ThingSpeak
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +67,7 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         getSensorDataForAirHumidity();
         getSensorDataForLuminosity();
         getSensorDataForWaterLevel();
+        updateInfoTextView();
 
         // refresh the activity every 100 seconds
         // Call the refreshRunnable to start the refreshing process
@@ -76,6 +89,7 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                     getSensorDataForAirHumidity();
                     getSensorDataForLuminosity();
                     getSensorDataForWaterLevel();
+                    updateInfoTextView();
 
                     Toast.makeText(PlantActivity.this, "Sensor Data Updated!", Toast.LENGTH_LONG).show();
 
@@ -147,50 +161,28 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 JSONObject field = feedsArray.getJSONObject(i);
 
                                 temp = field.getString("field1");
+                                temp_time = field.getString("created_at").substring(0,10) + " " + field.getString("created_at").substring(11,19);
                                 // Toast.makeText(PlantActivity.this, "temp:"+temp, Toast.LENGTH_SHORT).show();
                                 // i dont get it... it receives the data, but can't display it on the text view field
                                 tv_temp.setText(temp + "°C");
-/*
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Your ImageView Code & setImageBitmap
-                                        tv_temp.setText(temp + "°C");
-                                    }
-                                }, 20);*/
 
-/*                                PlantActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((TextView)tv_temp).setText(temp);
-                                    }
-                                });*/
-
-/*                                // Use runOnUiThread to update the TextView on the main thread
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tv_temp.setText(temp + "°C");
-                                    }
-                                });*/
-
-
-                                /*// Check if there is data in the "field1" channel
-                                if (field.getString("field1") != null) {
-                                    // Retrieve temperature value and time from the feed
-                                    // temp = field.getString("field1");
-                                    // tv_temp.setText(temp + "°C");
-
-                                    // it arrives here
-                                    // Toast.makeText(PlantActivity.this, temp +"this is temp", Toast.LENGTH_SHORT).show();
-                                    //temp_time = field.getString("time: ");
-
-                                    // Update the UI with the temperature value
-                                    // tv_temp.setText(temp + "°C");
+                                if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+                                    // if the user has a plant, check plant settings, compare them with the actual sensor data, set the color of the layout to alert the user about inconsistent or harmful settings
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp();
+                                } else {
+                                    minValue = -10.0F;
+                                    maxValue = 120.0F;
                                 }
-                                else {
-                                    Toast.makeText(PlantActivity.this, "no temp received", Toast.LENGTH_SHORT).show();
-                                }*/
+
+                                if (Float.parseFloat(temp) > minValue && Float.parseFloat(temp) < maxValue) {
+                                    // sensor data is within the acceptable range, display the normal color
+                                    layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
+                                } else {
+                                    // the sensor detects bad environment data, less or greater than the range set in data
+                                    layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                }
+
                             }
                         } catch (JSONException e) {
                             // Handle JSON parsing exception
@@ -205,62 +197,11 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                     }
                 });
 
+        updateInfoTextView();
+
         // Add the request to the RequestQueue to send the request to the server
         requestQueue.add(request);
     }
-
-
-/*
-
-
-    private void getSensorDataForSoilMoisture(){
-        String urlSoilHumid = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlSoilHumid, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("feeds");
-                            JSONObject field = jsonArray.getJSONObject(jsonArray.length()-1);
-                            soil_moist = field.getString("field1");
-                            // soil_moist_time = field.getString("created_at").substring(0,10) + " " + field.getString("created_at").substring(11,19);
-                            tv_soil_moisture.setText(soil_moist + "%");
-                            if(CurrentLoggedUser.getInstance().getCurrentUser().getPlant() != null){
-                                if(Integer.parseInt(soil_moist) >= CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist()
-                                        && Integer.parseInt(soil_moist) <= CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist()){
-                                    layout_soil_moisture.setBackgroundColor(Color.parseColor("#eff5bf"));
-                                    CurrentLoggedUser.getInstance().setCurrentMoist(0);
-                                }else{
-                                    layout_soil_moisture.setBackgroundColor(Color.parseColor("#aaff0000"));
-                                }
-                            }
-                            if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
-                                if(Integer.parseInt(soil_moist) > CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist()){
-                                    CurrentLoggedUser.getInstance().setCurrentMoist(1);
-                                }
-                                if(Integer.parseInt(soil_moist) < CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist()){
-                                    CurrentLoggedUser.getInstance().setCurrentMoist(-1);
-                                }
-                            }
-                            // displayAndFormatInfo();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        requestQueue.add(request);
-    }
-*/
-
-
-
-    /// here field4
-
 
     private void getSensorDataForSoilMoisture() {
         // URL for the moisture sensor data
@@ -280,8 +221,26 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 JSONObject field = feedsArray.getJSONObject(i);
 
                                 soil_moist = field.getString("field4");
+                                soil_moist_time = field.getString("created_at").substring(0,10) + " " + field.getString("created_at").substring(11,19);
                                 // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
                                 tv_soil_moisture.setText(soil_moist + "%");
+                                if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+                                    // if the user has a plant, check plant settings, compare them with the actual sensor data, set the color of the layout to alert the user about inconsistent or harmful settings
+                                    // change here to make it more configurable !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinHumid();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxHumid();
+                                } else{
+                                    minValue = -10.0F;
+                                    maxValue = 120.0F;
+                                }
+
+                                if (Float.parseFloat(soil_moist) > minValue && Float.parseFloat(soil_moist) < maxValue) {
+                                    // sensor data is within the acceptable range, display the normal color
+                                    layout_soil_moisture.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
+                                } else {
+                                    // the sensor detects bad environment data, less or greater than the range set in data
+                                    layout_soil_moisture.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                }
 
                             }
                         } catch (JSONException e) {
@@ -300,50 +259,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         // Add the request to the RequestQueue to send the request to the server
         requestQueue.add(request);
     }
-
-
-/*
-
-
-    private void getSensorDataForSoilMoisture() {
-        // URL for the moisture sensor data
-        String SoilMoistureURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
-
-        // Create a JsonObjectRequest to make a GET request
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, SoilMoistureURL, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Get the "feeds" JSON array from the response
-                            JSONArray feedsArray = response.getJSONArray("feeds");
-
-                            // Iterate over the feeds array
-                            for (int i = 0; i < feedsArray.length(); i++) {
-                                JSONObject field = feedsArray.getJSONObject(i);
-
-                                soil_moist = field.getString("field4");
-                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
-                                tv_soil_moisture.setText(soil_moist + "%");
-
-                            }
-                        } catch (JSONException e) {
-                            // Handle JSON parsing exception
-                            throw new RuntimeException(e);
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error response here
-                    }
-                });
-
-        // Add the request to the RequestQueue to send the request to the server
-        requestQueue.add(request);
-    }
-*/
 
 
     private void getSensorDataForAirHumidity() {
@@ -366,6 +281,77 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 air_humid = field.getString("field2");
                                 // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
                                 tv_air_humid.setText(air_humid + "%");
+
+
+                                if (CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp();
+                                } else{
+                                    minValue = -10.0F;
+                                    maxValue = 120.0F;
+                                }
+
+                                if (Float.parseFloat(temp) > minValue && Float.parseFloat(temp) < maxValue) {
+                                    // sensor data is within the acceptable range, display the normal color
+                                    layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
+                                } else {
+                                    // the sensor detects bad environment data, less or greater than the range set in data
+                                    layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            // Handle JSON parsing exception
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response here
+                    }
+                });
+
+        // Add the request to the RequestQueue to send the request to the server
+        requestQueue.add(request);
+    }
+
+    private void getSensorDataForLuminosity() {
+        // URL for the moisture sensor data
+        String AirHumidityURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
+
+        // Create a JsonObjectRequest to make a GET request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, AirHumidityURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Get the "feeds" JSON array from the response
+                            JSONArray feedsArray = response.getJSONArray("feeds");
+
+                            // Iterate over the feeds array
+                            for (int i = 0; i < feedsArray.length(); i++) {
+                                JSONObject field = feedsArray.getJSONObject(i);
+
+                                lumin = field.getString("field3");
+                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
+                                tv_lumin.setText(lumin + "%");
+
+                                if (CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp();
+                                } else{
+                                    minValue = -10.0F;
+                                    maxValue = 120.0F;
+                                }
+
+                                if (Float.parseFloat(lumin) > minValue && Float.parseFloat(lumin) < maxValue) {
+                                    // sensor data is within the acceptable range, display the normal color
+                                    layout_lumin.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
+                                } else {
+                                    // the sensor detects bad environment data, less or greater than the range set in data
+                                    layout_lumin.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                }
 
                             }
                         } catch (JSONException e) {
@@ -407,6 +393,17 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
                                 tv_water_level.setText(water_level + "%");
 
+                                minValue = -10.0F;
+                                maxValue = 100.0F;
+
+                                if (Float.parseFloat(water_level) > minValue && Float.parseFloat(water_level) < maxValue) {
+                                    // sensor data is within the acceptable range, display the normal color
+                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
+                                } else {
+                                    // the sensor detects bad environment data, less or greater than the range set in data
+                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                }
+
                             }
                         } catch (JSONException e) {
                             // Handle JSON parsing exception
@@ -425,34 +422,10 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         requestQueue.add(request);
     }
 
-
-/*
-    private void getSensorDataForTemperature(){
-        String TemperatureSensorURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=1";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, TemperatureSensorURL, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray feedsArray = response.getJSONArray("feeds"); // get the feeds
-                    for (int i = 0; i < feedsArray.length(); i++) {
-                        JSONObject field = feedsArray.getJSONObject(i);
-                        if(field.getString("field1") != null) { // is there something in the channel field1?
-                            temp = field.getString("field1");
-                            temp_time = field.getString("time: ");
-                            tv_temperature.setText(temp + "°C");
-                        }
-
-                    }
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-
-
-    }*/
-
+    private void updateInfoTextView(){
+        plantInfoSensors = String.format("Plant status updated on: Soil Moisture: %s | Air Humidity: %s | Temperature:    %s | Light Intensity:   %s | Water level:   %s",soil_moist_time, air_humid_time, lumin_time, temp_time, water_level_time);
+        tv_plant_info.setText(plantInfoSensors);
+    }
 
 
     private void setButtonNavigation(){
@@ -487,48 +460,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
     }
 
 
-
-
-    private void getSensorDataForLuminosity() {
-        // URL for the moisture sensor data
-        String AirHumidityURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
-
-        // Create a JsonObjectRequest to make a GET request
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, AirHumidityURL, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Get the "feeds" JSON array from the response
-                            JSONArray feedsArray = response.getJSONArray("feeds");
-
-                            // Iterate over the feeds array
-                            for (int i = 0; i < feedsArray.length(); i++) {
-                                JSONObject field = feedsArray.getJSONObject(i);
-
-                                lumin = field.getString("field3");
-                                // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
-                                tv_lumin.setText(lumin + "%");
-
-                            }
-                        } catch (JSONException e) {
-                            // Handle JSON parsing exception
-                            throw new RuntimeException(e);
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error response here
-                    }
-                });
-
-        // Add the request to the RequestQueue to send the request to the server
-        requestQueue.add(request);
-    }
-
-
     private void setColors(){
         // set default colors for text views if the user doesn't have a plant
     }
@@ -539,7 +470,7 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         tv_temp = findViewById(R.id.tv_temperature);
         tv_water_level = findViewById(R.id.tv_water_level);
         tv_lumin = findViewById(R.id.tv_lumin);
-        tv_info = findViewById(R.id.tv_info);
+        tv_plant_info = findViewById(R.id.tv_info);
         layout_lumin = findViewById(R.id.layout_lumin);
         layout_air_humid = findViewById(R.id.layout_air_humid);
         layout_temperature = findViewById(R.id.layout_temperature);
@@ -548,17 +479,17 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
     }
 
     private void initTextViewStrings(){
-        soil_moist = "-";
-        air_humid = "-";
-        temp = "-";
-        lumin = "-";
-        water_level = "-";
-        air_humid_time = "-";
-        soil_moist_time = "-";
-        lumin_time = "-";
-        water_level_time = "-";
-        temp_time = "-";
-        info = "Information about the plant will be displayed here...";
+        soil_moist = "N/A";
+        air_humid = "N/A";
+        temp = "N/A";
+        lumin = "N/A";
+        water_level = "N/A";
+        air_humid_time = "N/A";
+        soil_moist_time = "N/A";
+        lumin_time = "N/A";
+        water_level_time = "N/A";
+        temp_time = "N/A";
+        plantInfoSensors = "Information about the plant will be displayed here...";
     }
 
 }

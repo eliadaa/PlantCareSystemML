@@ -160,7 +160,9 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Create a new Plant object
         // CurrentLoggedUser.getInstance().setCurrentUserProfile(currentUser);
-        Plant plant = new Plant(myPlantName, maxMoist, minMoist, maxTemp, minTemp, maxHumi, minHumi, maxLight, minLight);
+
+//            public Plant(String plantName, float minHumid, float maxHumid, float minTemp, float maxTemp, float minLuminosity, float maxLuminosity, float minSoilMoist, float maxSoilMoist)
+        Plant plant = new Plant(myPlantName, minHumi, maxHumi, minTemp, maxTemp, minLight,  maxLight, minMoist, maxMoist);
         usersDB.child(currentUser.getUid()).child("plant").setValue(plant);
         CurrentLoggedUser.getInstance().getCurrentUserProfile().setPlant(plant);
         removeDataFromEditTexts();
@@ -396,15 +398,15 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
             actual_plant_data = String.format("Plant Care Settings for plant:   <b>%s</b><br>" +
                                               "Temp:        <b>%s°C - %s°C</b>     |  Humid:   <b>%s%% - %s%%</b><br>" +
                                               "Soil Moist:  <b>%s%% - %s%%</b>      |  Light:   <b>%s%% - %s%%</b>",
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getPlantName(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinTemp(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxTemp(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinHumid(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxHumid(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinSoilMoist(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxSoilMoist(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMinLuminosity(),
-                    CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity());
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getPlantName(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinHumid(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxHumid(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxSoilMoist(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinLuminosity(),
+                    CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxLuminosity());
             // text_view_info.setText(actual_plant_data);
             text_view_info.setText(Html.fromHtml(actual_plant_data));
 
