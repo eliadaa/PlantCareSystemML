@@ -179,15 +179,15 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 if (Float.parseFloat(temp) < minValue) { // invalid data < min &
                                     // sensor data is within the acceptable range, display the normal color
                                     layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(-1); // range is not respected, smaller, -1
+                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(WarningLevel.LOW); // range is not respected, smaller, -1
                                 } else if(Float.parseFloat(temp) > maxValue) {  // greater than the acceptable range
                                     // sensor data is within the acceptable range, display the normal color
                                     layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(1); // range is not respected, greater, 1
+                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(WarningLevel.HIGH); // range is not respected, greater, 1
                                 } else { // valid data
                                     // the sensor detects good environment data, in range
                                     layout_temperature.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
-                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(0); // set to 0
+                                    CurrentLoggedUser.getInstance().setCurrentTempWarning(WarningLevel.NORMAL); // set to 0
                                 }
 
                             }
@@ -244,15 +244,15 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 if (Float.parseFloat(soil_moist) < minValue) { // smaller than the limit
                                     // sensor data is within the acceptable range, display the warning
                                     layout_soil_moisture.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(-1); // smaller, -1
+                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(WarningLevel.LOW); // smaller, -1
                                 } else if(Float.parseFloat(soil_moist) > maxValue){
                                     // sensor data is within the acceptable range, display the normal color
                                     layout_soil_moisture.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(1);
+                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(WarningLevel.HIGH);
                                 } else {
                                     // the sensor detects good environment data, in range
                                     layout_soil_moisture.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
-                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(0);     // very good
+                                    CurrentLoggedUser.getInstance().setCurrentMoistWarning(WarningLevel.NORMAL);     // very good
                                  }
 
                             }
@@ -307,14 +307,14 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 if (Float.parseFloat(air_humid) < minValue) {  // too dry
                                     // sensor data is not in the acceptable range, display the normal color
                                     layout_air_humid.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(-1);
+                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(WarningLevel.LOW);
                                 } else if (Float.parseFloat(air_humid) > maxValue){ // to humid
                                     layout_air_humid.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(1);
+                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(WarningLevel.HIGH);
                                 } else {
                                     // the sensor detects good environment data, in range
                                     layout_air_humid.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
-                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(0); // good data
+                                    CurrentLoggedUser.getInstance().setCurrentHumWarning(WarningLevel.NORMAL); // good data
                                 }
                             }
                         } catch (JSONException e) {
@@ -366,14 +366,14 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 if (Float.parseFloat(lumin) < minValue) {
                                     // sensor data is not within the acceptable range, display the warning color
                                     layout_lumin.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(-1);
+                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(WarningLevel.LOW);
                                 } else if(Float.parseFloat(lumin) > maxValue){
                                     layout_lumin.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(1);
+                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(WarningLevel.HIGH);
                                 } else {
                                     // the sensor detects good environment data
                                     layout_lumin.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
-                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(0);
+                                    CurrentLoggedUser.getInstance().setCurrentLumWarning(WarningLevel.NORMAL);
                                 }
 
                             }
@@ -419,15 +419,17 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 minValue = 0.0F;
                                 maxValue = 100.0F;
 
-                                if (Float.parseFloat(water_level) > minValue) {
-                                    // sensor data is within the acceptable range, display the normal color
-                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
-                                } else if (Float.parseFloat(water_level) < maxValue){
-
+                                if (Float.parseFloat(water_level) < minValue) {
+                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                    CurrentLoggedUser.getInstance().setCurrentWaterWarning(WarningLevel.LOW);
+                                    showDialogCheckWaterTank();
+                                } else if (Float.parseFloat(water_level) > maxValue){
+                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
+                                    CurrentLoggedUser.getInstance().setCurrentWaterWarning(WarningLevel.HIGH);
+                                    showDialogCheckWaterTank();
                                 } else {
                                     // the sensor detects bad environment data, less or greater than the range set in data
-                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));
-                                    showDialogCheckWaterTank();
+                                    layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.pretty_blue));
                                 }
 
                             }

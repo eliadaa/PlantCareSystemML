@@ -7,7 +7,7 @@ public class CurrentLoggedUser {
     private UserProfile currentUser; // this is the user
 
     // his plant has these parameters:
-    private int currentMoistWarning = 0, currentTempWarning = 0, currentHumWarning = 0, currentLumWarning = 0;
+    private WarningLevel currentMoistWarning, currentTempWarning, currentHumWarning, currentLumWarning, currentWaterWarning;
 
     public UserProfile getCurrentUserProfile(){
         return currentUser;
@@ -42,11 +42,11 @@ public class CurrentLoggedUser {
         this.currentUser = currentUser;
     }
 
-    public int getCurrentMoistWarning() {
+    public WarningLevel getCurrentMoistWarning() {
         return currentMoistWarning;
     }
 
-    public void setCurrentMoistWarning(int currentMoistWarning) {
+    public void setCurrentMoistWarning(WarningLevel currentMoistWarning) {
         // this.currentMoist = currentMoist;
         // or use something like:
         // using this, you first retrieve the instance of the current logged user then the value is assigned to it
@@ -54,29 +54,39 @@ public class CurrentLoggedUser {
         CurrentLoggedUser.getInstance().currentMoistWarning = currentMoistWarning;
     }
 
-    public int getCurrentTempWarning() {
+    public WarningLevel getCurrentTempWarning() {
         return currentTempWarning;
     }
 
-    public void setCurrentTempWarning(int currentTempWarning) {
+    public void setCurrentTempWarning(WarningLevel currentTempWarning) {
         //this.currentTemp = currentTemp;
         CurrentLoggedUser.getInstance().currentTempWarning = currentTempWarning;
     }
 
-    public int getCurrentHumWarning() {
+    public WarningLevel getCurrentWaterWarning() {
+        return currentWaterWarning;
+    }
+
+
+    public void setCurrentWaterWarning(WarningLevel currentWaterWarning) {
+        CurrentLoggedUser.getInstance().currentWaterWarning = currentWaterWarning;
+    }
+
+
+    public WarningLevel getCurrentHumWarning() {
         return currentHumWarning;
     }
 
-    public void setCurrentHumWarning(int currentHumWarning) {
+    public void setCurrentHumWarning(WarningLevel currentHumWarning) {
         // this.currentHum = currentHum;
         CurrentLoggedUser.getInstance().currentHumWarning = currentHumWarning;
     }
 
-    public int getCurrentLumWarning() {
+    public WarningLevel getCurrentLumWarning() {
         return currentLumWarning;
     }
 
-    public void setCurrentLumWarning(int currentLumWarning) {
+    public void setCurrentLumWarning(WarningLevel currentLumWarning) {
         //this.currentLum = currentLum;
         CurrentLoggedUser.getInstance().currentLumWarning = currentLumWarning;
     }

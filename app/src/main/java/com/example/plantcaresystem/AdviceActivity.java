@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,55 +32,64 @@ public class AdviceActivity extends AppCompatActivity {
         initBottomNavigation();
         initViews();
         initAdviceList();
-        setAdviceListRecylerView();
+        setAdviceListRecyclerView();
+        Toast.makeText(this, ""+adviceListModel.size(), Toast.LENGTH_SHORT).show();
     }
 
-    private void initAdviceList(){
+    private void initAdviceList() {
         adviceListModel = new ArrayList<>();
 
-        // to add water level indicator, getter and setter
-        if(CurrentLoggedUser.getInstance().getCurrentTempWarning() == 0 && CurrentLoggedUser.getInstance().getCurrentHumWarning() == 0 &&
-            CurrentLoggedUser.getInstance().getCurrentLumWarning() == 0 && CurrentLoggedUser.getInstance().getCurrentMoistWarning() == 0){
-            // parameters are within the range, display good message
-            adviceListModel.add(new AdviceListModel(getString(R.string.normal_behavior_title), getString(R.string.good_behaviour_advice)));
+        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.NORMAL) &&
+                CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.NORMAL) &&
+                CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.NORMAL) &&
+                CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.NORMAL)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.normal_behavior_title),
+                    getString(R.string.good_behaviour_advice)));
         }
 
-        if(CurrentLoggedUser.getInstance().getCurrentMoistWarning() < 1){
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)));
+        if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.LOW)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.low_luminosity_title),
+                    getString(R.string.low_luminosity_advice)));
         }
-        if(CurrentLoggedUser.getInstance().getCurrentMoistWarning() == 1){ // meaning that the value is too small
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)));
-        }
-
-        if(CurrentLoggedUser.getInstance().getCurrentLumWarning() < 1){
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)));
-        }
-        if(CurrentLoggedUser.getInstance().getCurrentLumWarning() == 1){ // meaning that the value is too small
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)));
+        if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.HIGH)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.high_luminosity_title),
+                    getString(R.string.high_luminosity_advice)));
         }
 
-        if(CurrentLoggedUser.getInstance().getCurrentHumWarning() < 1){
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_air_humidity_title), getString(R.string.high_air_humidity_advice)));
+        if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.LOW)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.low_soil_moisture_title),
+                    getString(R.string.low_soil_moisture_advice)));
         }
-        if(CurrentLoggedUser.getInstance().getCurrentHumWarning() == 1){ // meaning that the value is too small
-            adviceListModel.add(new AdviceListModel(getString(R.string.low_air_humidity_title), getString(R.string.low_air_humidity_advice)));
+        if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.HIGH)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title),
+                    getString(R.string.high_soil_moisture_advice)));
         }
-/*
-        if(CurrentLoggedUser.getInstance().getCurrentLumWarning() < 1){
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)));
-        }
-        if(CurrentLoggedUser.getInstance().getCurrentLumWarning() == 1){ // meaning that the value is too small
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title), getString(R.string.high_soil_moisture_advice)))
-        }*/
 
+        if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.LOW)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.low_air_humidity_title),
+                    getString(R.string.low_air_humidity_advice)));
+        }
+        if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.HIGH)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.high_air_humidity_title),
+                    getString(R.string.high_air_humidity_advice)));
+        }
 
+        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.LOW)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.low_temperature_title),
+                    getString(R.string.low_temperature_advice)));
+        }
+        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.HIGH)) {
+            adviceListModel.add(new AdviceListModel(getString(R.string.high_temperature_title),
+                    getString(R.string.high_temperature_advice)));
+        }
     }
 
-    private void initViews(){
+    private void initViews() {
         adviceList = findViewById(R.id.rv_advice_list);
     }
 
-    private void setAdviceListRecylerView(){
+    private void setAdviceListRecyclerView() {
+        initAdviceList();
         adviceListAdapter = new AdviceListAdapter(adviceListModel);
         adviceList.setLayoutManager(new LinearLayoutManager(this));
         adviceList.setAdapter(adviceListAdapter);

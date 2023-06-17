@@ -16,23 +16,23 @@ public class AdviceListAdapter extends RecyclerView.Adapter<AdviceListViewHolder
 
     private Context context;
 
+    public AdviceListAdapter(List<AdviceListModel> adviceListInfo) {
+        this.adviceListInfo = adviceListInfo;
+    }
+
     @NonNull
     @Override
     public AdviceListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.list_advice, parent, false);
-        AdviceListViewHolder viewHolder = new AdviceListViewHolder(view);
-        return viewHolder;
+        return new AdviceListViewHolder(view);
     }
 
-    public AdviceListAdapter(List<AdviceListModel> newList){
-        this.adviceListInfo = newList;
-    }
     @Override
     public void onBindViewHolder(@NonNull AdviceListViewHolder holder, int position) {
-        final AdviceListModel newModel = adviceListInfo.get(position);
-        holder.setAdvice(newModel.getTitle(), newModel.getAdvice());
+        AdviceListModel advice = adviceListInfo.get(position);
+        holder.setAdvice(advice.getTitle(), advice.getAdvice());
     }
 
     @Override
