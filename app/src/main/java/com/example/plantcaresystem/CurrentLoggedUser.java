@@ -7,7 +7,7 @@ public class CurrentLoggedUser {
     private UserProfile currentUser; // this is the user
 
     // his plant has these parameters:
-    private int currentMoist = 0, currentTemp = 0, currentHum = 0, currentLum = 0;
+    private int currentMoistWarning = 0, currentTempWarning = 0, currentHumWarning = 0, currentLumWarning = 0;
 
     public UserProfile getCurrentUserProfile(){
         return currentUser;
@@ -42,42 +42,42 @@ public class CurrentLoggedUser {
         this.currentUser = currentUser;
     }
 
-    public int getCurrentMoist() {
-        return currentMoist;
+    public int getCurrentMoistWarning() {
+        return currentMoistWarning;
     }
 
-    public void setCurrentMoist(int currentMoist) {
+    public void setCurrentMoistWarning(int currentMoistWarning) {
         // this.currentMoist = currentMoist;
         // or use something like:
         // using this, you first retrieve the instance of the current logged user then the value is assigned to it
         // so it operates on the singleton instance directly
-        CurrentLoggedUser.getInstance().currentMoist=currentMoist;
+        CurrentLoggedUser.getInstance().currentMoistWarning = currentMoistWarning;
     }
 
-    public int getCurrentTemp() {
-        return currentTemp;
+    public int getCurrentTempWarning() {
+        return currentTempWarning;
     }
 
-    public void setCurrentTemp(int currentTemp) {
+    public void setCurrentTempWarning(int currentTempWarning) {
         //this.currentTemp = currentTemp;
-        CurrentLoggedUser.getInstance().currentTemp = currentTemp;
+        CurrentLoggedUser.getInstance().currentTempWarning = currentTempWarning;
     }
 
-    public int getCurrentHum() {
-        return currentHum;
+    public int getCurrentHumWarning() {
+        return currentHumWarning;
     }
 
-    public void setCurrentHum(int currentHum) {
+    public void setCurrentHumWarning(int currentHumWarning) {
         // this.currentHum = currentHum;
-        CurrentLoggedUser.getInstance().currentHum = currentHum;
+        CurrentLoggedUser.getInstance().currentHumWarning = currentHumWarning;
     }
 
-    public int getCurrentLum() {
-        return currentLum;
+    public int getCurrentLumWarning() {
+        return currentLumWarning;
     }
 
-    public void setCurrentLum(int currentLum) {
+    public void setCurrentLumWarning(int currentLumWarning) {
         //this.currentLum = currentLum;
-        CurrentLoggedUser.getInstance().currentLum = currentLum;
+        CurrentLoggedUser.getInstance().currentLumWarning = currentLumWarning;
     }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="normal_behavior_title">Congrats! All plant parameters are within the limits</string>
+    <string name="high_soil_moisture_title">The plant is over watered!</string>
+    <string name="low_soil_moisture_title">The plant needs watering!</string>
+    <string name="high_temperature_title">It\'s too hot!</string>
+    <string name="low_temperature_title">The plant is getting cold!</string>
+    <string name="high_air_humidity_title">There is a lot of humidity in the air!</string>
+    <string name="low_air_humidity_title">The air is getting dry!</string>
+    <string name="high_luminosity_title">The sun is shining right over me!</string>
+    <string name="low_luminosity_title">It got dark!</string>
+    <string name="high_water_level_title">Too much water in the tank!</string>
+    <string name="low_water_level_title">There is no more water, the pump can\'t work</string>
+    <string name="good_behaviour_advice">You\'re doing a great job keeping me alive</string>
+    <string name="high_soil_moisture_advice">The soil is too wet, in the long run, the roots might rotten. Kindly check the environment and drain it</string>
+    <string name="low_soil_moisture_advice">The soil is too dry, the plant will get thirsty and, in the long run, get pale</string>
+    <string name="high_temperature_advice">The plant might burn</string>
+    <string name="low_temperature_advice">The plant might freeze</string>
+    <string name="high_air_humidity_advice">The environment is too humid</string>
+    <string name="low_air_humidity_advice">The environment is too dry</string>
+    <string name="high_luminosity_advice">Remove me from the sun</string>
+    <string name="low_luminosity_advice">I might need some sun</string>
+    <string name="high_water_level_advice">The tank might overfill</string>
+    <string name="low_water_level_advice">Please fill the water tank, so I can properly take care of your plant</string>
+
+</resources>

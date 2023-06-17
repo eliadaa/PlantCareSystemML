@@ -159,8 +159,6 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         minLight = Float.parseFloat(editTextMinLuminosity.getText().toString());
 
         // Create a new Plant object
-        // CurrentLoggedUser.getInstance().setCurrentUserProfile(currentUser);
-
 //            public Plant(String plantName, float minHumid, float maxHumid, float minTemp, float maxTemp, float minLuminosity, float maxLuminosity, float minSoilMoist, float maxSoilMoist)
         Plant plant = new Plant(myPlantName, minHumi, maxHumi, minTemp, maxTemp, minLight,  maxLight, minMoist, maxMoist);
         usersDB.child(currentUser.getUid()).child("plant").setValue(plant);
@@ -168,29 +166,6 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         removeDataFromEditTexts();
         setActualPlantParameters();
         Toast.makeText(this, "Info saved", Toast.LENGTH_LONG).show();
-
-/*
-        sendDataToThingSpeak("https://api.thingspeak.com/update?api_key=VVSDJEX2MALIAU1D&field6=10");
-        Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
-*/
-
-//        sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity()));
-//        Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
-
-/*        if(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity() > 0){
-            // got the left limit, send this range to thingspeak -> ESP8266 to control the pump
-            sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(CurrentLoggedUser.getInstance().getCurrentUser().getPlant().getMaxLuminosity()));
-            Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
-        }*/
-
-//        if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
-//            if(parseFloatEditText(editTextMinMoisture) > 0){
-//                // got the left limit, send this range to thingspeak -> ESP8266 to control the pump
-//                sendDataToThingSpeak("VVSDJEX2MALIAU1D", Float.toString(parseFloatEditText(editTextMinMoisture)));
-//                Toast.makeText(this, "sent info ", Toast.LENGTH_LONG).show();
-//            }
-//        }
-
     }
 
     private boolean isEmptyEditText(EditText editText) {
