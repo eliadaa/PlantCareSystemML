@@ -11,7 +11,9 @@
     <string name="low_luminosity_title">It got dark!</string>
     <string name="high_water_level_title">Too much water in the tank!</string>
     <string name="low_water_level_title">There is no more water, the pump can\'t work</string>
+    <string name="no_plant_title">No plant set</string>
     <string name="good_behavior_advice">You\'re doing a great job keeping me alive</string>
+    <string name="no_plant_advice">You don\'t have any plant set, it would be hard to give advice not knowing the plant details</string>
     <string name="high_soil_moisture_advice">The soil is too wet. In the long run, the roots might rot. Please adjust the watering schedule and ensure proper drainage.</string>
     <string name="low_soil_moisture_advice">The soil is too dry. Your plant is thirsty and may start wilting. Increase the frequency of watering and ensure proper moisture.</string>
     <string name="high_temperature_advice">The temperature is too high for your plant. Move it to a cooler spot and provide shade if possible to prevent heat stress.</string>

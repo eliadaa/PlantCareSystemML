@@ -69,48 +69,55 @@ public class AdviceActivity extends AppCompatActivity {
     private void initAdviceList() {
         adviceListModel = new ArrayList<>();
 
-        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.NORMAL) &&
-                CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.NORMAL) &&
-                CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.NORMAL) &&
-                CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.NORMAL)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.normal_behavior_title),
-                    getString(R.string.good_behavior_advice)));
-        }
+        if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+            if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.NORMAL) &&
+                    CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.NORMAL) &&
+                    CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.NORMAL) &&
+                    CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.NORMAL)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.normal_behavior_title),
+                        getString(R.string.good_behavior_advice)));
+            }
 
-        if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.LOW)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.low_luminosity_title),
-                    getString(R.string.low_luminosity_advice)));
-        }
-        if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.HIGH)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_luminosity_title),
-                    getString(R.string.high_luminosity_advice)));
-        }
+            if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.LOW)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.low_luminosity_title),
+                        getString(R.string.low_luminosity_advice)));
+            }
+            if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.HIGH)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.high_luminosity_title),
+                        getString(R.string.high_luminosity_advice)));
+            }
 
-        if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.LOW)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.low_soil_moisture_title),
-                    getString(R.string.low_soil_moisture_advice)));
-        }
-        if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.HIGH)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title),
-                    getString(R.string.high_soil_moisture_advice)));
-        }
+            if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.LOW)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.low_soil_moisture_title),
+                        getString(R.string.low_soil_moisture_advice)));
+            }
+            if (CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.HIGH)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.high_soil_moisture_title),
+                        getString(R.string.high_soil_moisture_advice)));
+            }
 
-        if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.LOW)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.low_air_humidity_title),
-                    getString(R.string.low_air_humidity_advice)));
-        }
-        if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.HIGH)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_air_humidity_title),
-                    getString(R.string.high_air_humidity_advice)));
-        }
+            if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.LOW)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.low_air_humidity_title),
+                        getString(R.string.low_air_humidity_advice)));
+            }
+            if (CurrentLoggedUser.getInstance().getCurrentHumWarning().equals(WarningLevel.HIGH)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.high_air_humidity_title),
+                        getString(R.string.high_air_humidity_advice)));
+            }
 
-        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.LOW)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.low_temperature_title),
-                    getString(R.string.low_temperature_advice)));
-        }
-        if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.HIGH)) {
-            adviceListModel.add(new AdviceListModel(getString(R.string.high_temperature_title),
-                    getString(R.string.high_temperature_advice)));
+            if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.LOW)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.low_temperature_title),
+                        getString(R.string.low_temperature_advice)));
+            }
+            if (CurrentLoggedUser.getInstance().getCurrentTempWarning().equals(WarningLevel.HIGH)) {
+                adviceListModel.add(new AdviceListModel(getString(R.string.high_temperature_title),
+                        getString(R.string.high_temperature_advice)));
+            }
+        } else{
+            // Add the "good behavior" advice
+            adviceListModel.add(new AdviceListModel(getString(R.string.no_plant_title),
+                    getString(R.string.no_plant_advice)));
+            Toast.makeText(this, "Please go to the Data activity and set up the plant info", Toast.LENGTH_LONG).show();
         }
 
         totalAdvices = adviceListModel.size();

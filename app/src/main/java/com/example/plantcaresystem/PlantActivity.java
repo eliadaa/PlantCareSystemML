@@ -234,8 +234,9 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
                                     // if the user has a plant, check plant settings, compare them with the actual sensor data, set the color of the layout to alert the user about inconsistent or harmful settings
                                     // change here to make it more configurable !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinHumid();
-                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxHumid();
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxSoilMoist();
+
                                 } else{
                                     minValue = -10.0F;
                                     maxValue = 120.0F;
@@ -297,8 +298,8 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
 
                                 if (CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
-                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp();
-                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp();
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinHumid();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxHumid();
                                 } else{
                                     minValue = -10.0F;
                                     maxValue = 120.0F;
@@ -356,8 +357,8 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 tv_lumin.setText(lumin + "%");
 
                                 if (CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
-                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinTemp();
-                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxTemp();
+                                    minValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinLuminosity();
+                                    maxValue = CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMaxLuminosity();
                                 } else{
                                     minValue = -10.0F;
                                     maxValue = 120.0F;
@@ -397,10 +398,10 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
     private void getSensorDataForWaterLevel() {
         // URL for the moisture sensor data
-        String SoilMoistureURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
+        String WaterLevelURL = "https://api.thingspeak.com/channels/2175282/feeds.json?api_key=6OY4N35F3U7M4O6L&results=2";
 
         // Create a JsonObjectRequest to make a GET request
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, SoilMoistureURL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, WaterLevelURL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
