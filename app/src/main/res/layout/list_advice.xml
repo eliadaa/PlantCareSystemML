@@ -21,6 +21,8 @@
         android:layout_marginTop="15dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

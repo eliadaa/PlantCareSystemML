@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="normal_behavior_title">Congrats! All plant parameters are within the limits</string>
-    <string name="high_soil_moisture_title">The plant is over watered!</string>
+    <string name="high_soil_moisture_title">The plant is overwatered!</string>
     <string name="low_soil_moisture_title">The plant needs watering!</string>
     <string name="high_temperature_title">It\'s too hot!</string>
     <string name="low_temperature_title">The plant is getting cold!</string>
@@ -11,16 +11,15 @@
     <string name="low_luminosity_title">It got dark!</string>
     <string name="high_water_level_title">Too much water in the tank!</string>
     <string name="low_water_level_title">There is no more water, the pump can\'t work</string>
-    <string name="good_behaviour_advice">You\'re doing a great job keeping me alive</string>
-    <string name="high_soil_moisture_advice">The soil is too wet, in the long run, the roots might rotten. Kindly check the environment and drain it</string>
-    <string name="low_soil_moisture_advice">The soil is too dry, the plant will get thirsty and, in the long run, get pale</string>
-    <string name="high_temperature_advice">The plant might burn</string>
-    <string name="low_temperature_advice">The plant might freeze</string>
-    <string name="high_air_humidity_advice">The environment is too humid</string>
-    <string name="low_air_humidity_advice">The environment is too dry</string>
-    <string name="high_luminosity_advice">Remove me from the sun</string>
-    <string name="low_luminosity_advice">I might need some sun</string>
-    <string name="high_water_level_advice">The tank might overfill</string>
-    <string name="low_water_level_advice">Please fill the water tank, so I can properly take care of your plant</string>
-
+    <string name="good_behavior_advice">You\'re doing a great job keeping me alive</string>
+    <string name="high_soil_moisture_advice">The soil is too wet. In the long run, the roots might rot. Please adjust the watering schedule and ensure proper drainage.</string>
+    <string name="low_soil_moisture_advice">The soil is too dry. Your plant is thirsty and may start wilting. Increase the frequency of watering and ensure proper moisture.</string>
+    <string name="high_temperature_advice">The temperature is too high for your plant. Move it to a cooler spot and provide shade if possible to prevent heat stress.</string>
+    <string name="low_temperature_advice">The plant is getting cold. Find a warmer location for your plant and consider using a plant cover or insulating material to protect it from the cold.</string>
+    <string name="high_air_humidity_advice">The environment is excessively humid. Improve air circulation and avoid overwatering to prevent fungal diseases.</string>
+    <string name="low_air_humidity_advice">The air is too dry for your plant. Increase humidity by misting the leaves, using a humidifier, or placing a water tray nearby.</string>
+    <string name="high_luminosity_advice">Your plant is receiving intense sunlight. Move it to a spot with indirect or filtered light to prevent leaf scorching.</string>
+    <string name="low_luminosity_advice">Your plant requires more sunlight. Place it near a bright window or consider using artificial grow lights to provide adequate light.</string>
+    <string name="high_water_level_advice">The water tank is overfilled. Drain the excess water to avoid waterlogging and potential root rot.</string>
+    <string name="low_water_level_advice">Please fill the water tank so your plant can continue to receive the necessary water for optimal growth and functioning.</string>
 </resources>

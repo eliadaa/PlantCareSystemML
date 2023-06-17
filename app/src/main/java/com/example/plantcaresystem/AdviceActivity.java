@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -19,8 +19,11 @@ import java.util.List;
 
 public class AdviceActivity extends AppCompatActivity {
 
-    private RecyclerView adviceList;
-    private AdviceListAdapter adviceListAdapter;
+    private TextView tvTitle;
+    private TextView tvAdvice;
+
+    private int currentAdviceIndex = 0;
+    private int totalAdvices;
     private List<AdviceListModel> adviceListModel;
 
     @Override
@@ -29,11 +32,38 @@ public class AdviceActivity extends AppCompatActivity {
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_advice);
 
-        initBottomNavigation();
-        initViews();
         initAdviceList();
-        setAdviceListRecyclerView();
-        Toast.makeText(this, ""+adviceListModel.size(), Toast.LENGTH_SHORT).show();
+        initViews();
+        displayAdvice(currentAdviceIndex);
+        initBottomNavigation();
+
+        Button previousButton = findViewById(R.id.previousButton);
+        previousButton.setOnClickListener(v -> showPreviousAdvice());
+
+        Button nextButton = findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(v -> showNextAdvice());
+
+        Toast.makeText(this, "" + adviceListModel.size(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void showPreviousAdvice() {
+        if (currentAdviceIndex > 0) {
+            currentAdviceIndex--;
+            displayAdvice(currentAdviceIndex);
+        }
+    }
+
+    private void showNextAdvice() {
+        if (currentAdviceIndex < totalAdvices - 1) {
+            currentAdviceIndex++;
+            displayAdvice(currentAdviceIndex);
+        }
+    }
+
+    private void displayAdvice(int index) {
+        AdviceListModel advice = adviceListModel.get(index);
+        tvTitle.setText(advice.getTitle());
+        tvAdvice.setText(advice.getAdvice());
     }
 
     private void initAdviceList() {
@@ -44,7 +74,7 @@ public class AdviceActivity extends AppCompatActivity {
                 CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.NORMAL) &&
                 CurrentLoggedUser.getInstance().getCurrentMoistWarning().equals(WarningLevel.NORMAL)) {
             adviceListModel.add(new AdviceListModel(getString(R.string.normal_behavior_title),
-                    getString(R.string.good_behaviour_advice)));
+                    getString(R.string.good_behavior_advice)));
         }
 
         if (CurrentLoggedUser.getInstance().getCurrentLumWarning().equals(WarningLevel.LOW)) {
@@ -82,20 +112,16 @@ public class AdviceActivity extends AppCompatActivity {
             adviceListModel.add(new AdviceListModel(getString(R.string.high_temperature_title),
                     getString(R.string.high_temperature_advice)));
         }
+
+        totalAdvices = adviceListModel.size();
     }
 
     private void initViews() {
-        adviceList = findViewById(R.id.rv_advice_list);
+        tvTitle = findViewById(R.id.tv_title);
+        tvAdvice = findViewById(R.id.tv_advice);
     }
 
-    private void setAdviceListRecyclerView() {
-        initAdviceList();
-        adviceListAdapter = new AdviceListAdapter(adviceListModel);
-        adviceList.setLayoutManager(new LinearLayoutManager(this));
-        adviceList.setAdapter(adviceListAdapter);
-    }
-
-    private void initBottomNavigation(){
+    private void initBottomNavigation() {
         // init and assign var
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
