@@ -32,11 +32,9 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
 
     private LinearLayout layout_soil_moisture, layout_air_humid, layout_temperature, layout_lumin, layout_water_level;
 
-    private TextView tv_soil_moisture, tv_air_humid, tv_temp, tv_lumin, tv_water_level, tv_plant_info;
+    private TextView tv_soil_moisture, tv_air_humid, tv_temp, tv_lumin, tv_water_level;
 
-    private String soil_moist, air_humid, temp, lumin, water_level, plantInfoSensors;
-
-    private String soil_moist_time, air_humid_time, temp_time, lumin_time, water_level_time;
+    private String soil_moist, air_humid, temp, lumin, water_level;
 
     private Float minValue, maxValue;
 
@@ -69,7 +67,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         getSensorDataForAirHumidity();
         getSensorDataForLuminosity();
         getSensorDataForWaterLevel();
-        updateInfoTextView();
 
         // refresh the activity every 100 seconds
         // Call the refreshRunnable to start the refreshing process
@@ -90,7 +87,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                     getSensorDataForAirHumidity();
                     getSensorDataForLuminosity();
                     getSensorDataForWaterLevel();
-                    updateInfoTextView();
 
                     Toast.makeText(PlantActivity.this, "Sensor Data Updated!", Toast.LENGTH_LONG).show();
 
@@ -162,7 +158,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 JSONObject field = feedsArray.getJSONObject(i);
 
                                 temp = field.getString("field1");
-                                temp_time = field.getString("created_at").substring(0,10) + " " + field.getString("created_at").substring(11,19);
                                 // Toast.makeText(PlantActivity.this, "temp:"+temp, Toast.LENGTH_SHORT).show();
                                 // i dont get it... it receives the data, but can't display it on the text view field
                                 tv_temp.setText(temp + "°C");
@@ -203,9 +198,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                         // Handle error response here
                     }
                 });
-
-        updateInfoTextView();
-
         // Add the request to the RequestQueue to send the request to the server
         requestQueue.add(request);
     }
@@ -228,7 +220,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 JSONObject field = feedsArray.getJSONObject(i);
 
                                 soil_moist = field.getString("field4");
-                                soil_moist_time = field.getString("created_at").substring(0,10) + " " + field.getString("created_at").substring(11,19);
                                 // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
                                 tv_soil_moisture.setText(soil_moist + "%");
                                 if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
@@ -464,11 +455,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         });
     }
 
-    private void updateInfoTextView(){
-        plantInfoSensors = String.format("Plant status updated on: Soil Moisture: %s | Air Humidity: %s | Temperature:    %s | Light Intensity:   %s | Water level:   %s",soil_moist_time, air_humid_time, lumin_time, temp_time, water_level_time);
-        tv_plant_info.setText(plantInfoSensors);
-    }
-
 
     private void setButtonNavigation(){
 
@@ -501,18 +487,12 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         });
     }
 
-
-    private void setColors(){
-        // set default colors for text views if the user doesn't have a plant
-    }
-
     private void init(){
         tv_soil_moisture = findViewById(R.id.tv_soil_moisture);
         tv_air_humid = findViewById(R.id.tv_air_humid);
         tv_temp = findViewById(R.id.tv_temperature);
         tv_water_level = findViewById(R.id.tv_water_level);
         tv_lumin = findViewById(R.id.tv_lumin);
-        tv_plant_info = findViewById(R.id.tv_info);
         layout_lumin = findViewById(R.id.layout_lumin);
         layout_air_humid = findViewById(R.id.layout_air_humid);
         layout_temperature = findViewById(R.id.layout_temperature);
@@ -526,12 +506,6 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
         temp = "N/A";
         lumin = "N/A";
         water_level = "N/A";
-        air_humid_time = "N/A";
-        soil_moist_time = "N/A";
-        lumin_time = "N/A";
-        water_level_time = "N/A";
-        temp_time = "N/A";
-        plantInfoSensors = "Information about the plant will be displayed here...";
     }
 
 }
