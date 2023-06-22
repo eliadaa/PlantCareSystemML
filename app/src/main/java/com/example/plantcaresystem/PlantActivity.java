@@ -408,8 +408,13 @@ public class PlantActivity extends AppCompatActivity { // extends AppCompatActiv
                                 // Toast.makeText(PlantActivity.this, "" + soil_moist, Toast.LENGTH_LONG).show();
                                 tv_water_level.setText(water_level + "%");
 
-                                minValue = 0.0F;
-                                maxValue = 100.0F;
+                                if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
+                                    minValue = 50.0F;
+                                    maxValue = 100.0F;
+                                } else {
+                                    minValue = 0.0F;
+                                    maxValue = 100.0F;
+                                }
 
                                 if (Float.parseFloat(water_level) < minValue) {
                                     layout_water_level.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.darker_pastel_pink));

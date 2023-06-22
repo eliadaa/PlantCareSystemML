@@ -113,7 +113,17 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void SaveButtonListener(){
-        save_button.setOnClickListener(v -> SetAndUpdatePlantParameters()); // Update the plant parameters
+//        save_button.setOnClickListener(v -> SetAndUpdatePlantParameters()); // Update the plant parameters
+//        Toast.makeText(this, "sending...", Toast.LENGTH_SHORT).show();
+//        sendDataToMinMoistureThingSpeakField();
+
+        save_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetAndUpdatePlantParameters();
+                sendDataToMinMoistureThingSpeakField();
+            }
+        });
     }
 
     // Method to update the plant parameters
@@ -238,7 +248,12 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
             // text_view_info.setText(actual_plant_data);
             text_view_info.setText(Html.fromHtml(actual_plant_data));
 
-            // send min moisture value
+        }
+    }
+
+    void sendDataToMinMoistureThingSpeakField(){
+        // send min moisture value
+        if(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant() != null){
             sendValueToThingSpeak(String.valueOf(CurrentLoggedUser.getInstance().getCurrentUserProfile().getPlant().getMinSoilMoist()));
         }
     }
